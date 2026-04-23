@@ -287,7 +287,7 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
     <div class="welcome-divider"></div>
     <div style="font-size:clamp(9px,2.5vw,11px);letter-spacing:4px;text-transform:uppercase;color:var(--sage)">Wedding Photobooth</div>
     <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,3.5vw,17px);color:rgba(212,230,212,0.6);text-align:center;line-height:1.8;max-width:280px">
-      4 shots · 5 second countdown<br>Save & share your strip
+      3 shots · 5 second countdown<br>Save & share your strip
     </div>
     <button class="btn-primary" id="openBtn">Open Photobooth</button>
     <div class="error-box" id="errorBox"></div>
@@ -369,7 +369,7 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
     <!-- prev/next -->
     <div style="display:flex;gap:1.5rem;align-items:center">
       <button class="carousel-arrow" onclick="carouselPrev()">&#8592;</button>
-      <span id="carouselCount" style="font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:3px;color:var(--sage)">1 / 4</span>
+      <span id="carouselCount" style="font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:3px;color:var(--sage)">1 / 3</span>
       <button class="carousel-arrow" onclick="carouselNext()">&#8594;</button>
     </div>
   </div>
@@ -423,7 +423,7 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
 
 <script>
 var stream=null, facingMode='user', photos=[], currentShot=0, isCounting=false;
-var TOTAL=4;
+var TOTAL=3;
 
 document.addEventListener('DOMContentLoaded', function(){
 
@@ -708,7 +708,7 @@ async function shareStrip(){
 function renderStripCanvas(){
   return new Promise(function(resolve){
     var cw=640, ph=760, gap=6, headerH=100, footerH=88, pad=18;
-    var ch = headerH + (ph+gap)*4 - gap + footerH;
+    var ch = headerH + (ph+gap)*3 - gap + footerH;
     var c=document.createElement('canvas'); c.width=cw; c.height=ch;
     var ctx=c.getContext('2d');
 
