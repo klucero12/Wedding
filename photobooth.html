@@ -211,6 +211,54 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
   pointer-events:none;opacity:0;transition:opacity 0.3s;
 }
 .status-msg.show{opacity:1}
+
+/* ── TABS ── */
+.tab-row{display:flex;gap:0;border:1px solid rgba(143,174,143,0.3);border-radius:2px;overflow:hidden;margin-bottom:0.5rem}
+.tab-btn{
+  flex:1;padding:8px 20px;background:transparent;
+  border:none;color:var(--sage);
+  font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;
+}
+.tab-btn.active{background:rgba(143,174,143,0.18);color:var(--cream)}
+.tab-btn:not(:last-child){border-right:1px solid rgba(143,174,143,0.3)}
+
+/* ── CAROUSEL ── */
+.carousel-wrap{
+  width:min(72vw, 320px);
+  aspect-ratio:3/4;
+  overflow:hidden;
+  border-radius:3px;
+  position:relative;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+}
+.carousel-track{
+  display:flex;
+  height:100%;
+  transition:transform 0.38s cubic-bezier(0.4,0,0.2,1);
+}
+.carousel-slide{
+  min-width:100%;height:100%;
+  object-fit:cover;display:block;
+  border-radius:3px;
+}
+.carousel-dots{display:flex;gap:7px;align-items:center;justify-content:center}
+.carousel-dot{
+  width:7px;height:7px;border-radius:50%;
+  border:1px solid var(--sage);background:transparent;
+  transition:all 0.25s;cursor:pointer;
+}
+.carousel-dot.active{background:var(--gold);border-color:var(--gold);transform:scale(1.2)}
+.carousel-arrow{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(143,174,143,0.35);
+  background:transparent;color:var(--sage);
+  font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;-webkit-appearance:none;
+}
+.carousel-arrow:active{border-color:var(--gold);color:var(--gold)}
+
 </style>
 </head>
 <body>
@@ -300,116 +348,77 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
 
 <!-- STRIP -->
 <div class="screen hidden" id="strip-screen">
-  <div class="strip-title" style="margin-bottom:0.25rem">Your Photo Strip 🌿</div>
-  <!-- upload status bar -->
-  <div id="uploadStatus" style="display:none;font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);text-align:center;padding:0.4rem 1rem;background:rgba(143,174,143,0.12);border:1px solid rgba(143,174,143,0.2);border-radius:2px;max-width:min(260px,68vw);margin-bottom:0.25rem"></div>
-  <div class="strip-wrapper" id="stripWrapper">
+  <div class="strip-title" style="margin-bottom:0.4rem">Your Photos 🌿</div>
 
-    <!-- TOP botanical header -->
-    <div class="strip-header">
-      <!-- large left branch -->
-      <svg class="strip-branch-l" viewBox="0 0 90 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M78,135 Q60,90 45,60 Q30,30 18,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
-        <path d="M45,60 Q20,50 8,35 Q28,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
-        <path d="M45,60 Q22,72 12,60 Q30,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
-        <path d="M60,90 Q36,82 24,66 Q44,70 60,90Z" fill="#4a7c4a" opacity="0.65"/>
-        <path d="M60,90 Q38,102 28,92 Q46,87 60,90Z" fill="#2d5a2d" opacity="0.45"/>
-        <path d="M30,30 Q10,22 4,8 Q20,14 30,30Z" fill="#3a7a3a" opacity="0.6"/>
-        <path d="M30,30 Q14,40 6,32 Q20,27 30,30Z" fill="#4a7c4a" opacity="0.4"/>
-        <!-- small berries -->
-        <circle cx="18" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
-        <circle cx="22" cy="10" r="1.8" fill="#b8965a" opacity="0.5"/>
-        <circle cx="8" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
-      </svg>
-      <!-- large right branch -->
-      <svg class="strip-branch-r" viewBox="0 0 90 140" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12,135 Q30,90 45,60 Q60,30 72,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
-        <path d="M45,60 Q70,50 82,35 Q62,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
-        <path d="M45,60 Q68,72 78,60 Q60,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
-        <path d="M30,90 Q54,82 66,66 Q46,70 30,90Z" fill="#4a7c4a" opacity="0.65"/>
-        <path d="M30,90 Q52,102 62,92 Q44,87 30,90Z" fill="#2d5a2d" opacity="0.45"/>
-        <path d="M60,30 Q80,22 86,8 Q70,14 60,30Z" fill="#3a7a3a" opacity="0.6"/>
-        <path d="M60,30 Q76,40 84,32 Q70,27 60,30Z" fill="#4a7c4a" opacity="0.4"/>
-        <circle cx="72" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
-        <circle cx="68" cy="10" r="1.8" fill="#b8965a" opacity="0.5"/>
-        <circle cx="82" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
-      </svg>
-      <div class="strip-header-text">
-        <div class="strip-header-name">Adam & Kelvin</div>
-        <div class="strip-header-date">May 23 · 2026</div>
-      </div>
+  <!-- upload status -->
+  <div id="uploadStatus" style="display:none;font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);text-align:center;padding:0.35rem 1rem;background:rgba(143,174,143,0.12);border:1px solid rgba(143,174,143,0.2);border-radius:2px;max-width:min(320px,88vw);margin-bottom:0.4rem"></div>
+
+  <!-- tab switcher -->
+  <div class="tab-row">
+    <button class="tab-btn active" id="tabPhotos" onclick="switchTab('photos')">Photos</button>
+    <button class="tab-btn" id="tabStrip" onclick="switchTab('strip')">Strip</button>
+  </div>
+
+  <!-- PHOTO CAROUSEL -->
+  <div id="carouselView" style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;width:100%">
+    <div class="carousel-wrap">
+      <div class="carousel-track" id="carouselTrack"></div>
     </div>
+    <!-- dot indicators -->
+    <div class="carousel-dots" id="carouselDots"></div>
+    <!-- prev/next -->
+    <div style="display:flex;gap:1.5rem;align-items:center">
+      <button class="carousel-arrow" onclick="carouselPrev()">&#8592;</button>
+      <span id="carouselCount" style="font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:3px;color:var(--sage)">1 / 4</span>
+      <button class="carousel-arrow" onclick="carouselNext()">&#8594;</button>
+    </div>
+  </div>
 
-    <!-- photos injected here by JS -->
-
-    <!-- BOTTOM botanical footer -->
-    <div class="strip-footer">
-      <!-- bottom left botanical corner -->
-      <svg class="strip-corner-bl" viewBox="0 0 80 80" fill="none">
-        <path d="M5,75 Q5,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/>
-        <path d="M5,55 Q-5,38 5,22 Q14,36 5,55Z" fill="#4a7c4a" opacity="0.6"/>
-        <path d="M5,55 Q18,50 22,38 Q10,44 5,55Z" fill="#3a7a3a" opacity="0.5"/>
-        <path d="M20,28 Q10,14 18,4 Q24,16 20,28Z" fill="#4a7c4a" opacity="0.55"/>
-        <path d="M20,28 Q32,24 34,14 Q24,18 20,28Z" fill="#2d5a2d" opacity="0.45"/>
-        <circle cx="5" cy="75" r="2" fill="#b8965a" opacity="0.5"/>
-        <circle cx="40" cy="5" r="2" fill="#b8965a" opacity="0.5"/>
-      </svg>
-      <!-- bottom right botanical corner -->
-      <svg class="strip-corner-br" viewBox="0 0 80 80" fill="none">
-        <path d="M75,75 Q75,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/>
-        <path d="M75,55 Q85,38 75,22 Q66,36 75,55Z" fill="#4a7c4a" opacity="0.6"/>
-        <path d="M75,55 Q62,50 58,38 Q70,44 75,55Z" fill="#3a7a3a" opacity="0.5"/>
-        <path d="M60,28 Q70,14 62,4 Q56,16 60,28Z" fill="#4a7c4a" opacity="0.55"/>
-        <path d="M60,28 Q48,24 46,14 Q56,18 60,28Z" fill="#2d5a2d" opacity="0.45"/>
-        <circle cx="75" cy="75" r="2" fill="#b8965a" opacity="0.5"/>
-        <circle cx="40" cy="5" r="2" fill="#b8965a" opacity="0.5"/>
-      </svg>
-      <div class="strip-footer-inner">
-        <div class="strip-footer-loc">Chandler, Texas</div>
-        <!-- small floral divider -->
-        <div class="strip-floral-divider">
-          <svg viewBox="0 0 120 14" fill="none" style="width:100px;height:12px">
-            <line x1="0" y1="7" x2="42" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/>
-            <circle cx="52" cy="7" r="2" fill="#b8965a" opacity="0.6"/>
-            <circle cx="60" cy="7" r="3" fill="#b8965a" opacity="0.8"/>
-            <circle cx="68" cy="7" r="2" fill="#b8965a" opacity="0.6"/>
-            <line x1="78" y1="7" x2="120" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/>
-            <!-- tiny leaves around center -->
-            <path d="M60,4 Q55,1 52,3 Q56,5 60,4Z" fill="#4a7c4a" opacity="0.6"/>
-            <path d="M60,4 Q65,1 68,3 Q64,5 60,4Z" fill="#4a7c4a" opacity="0.6"/>
-          </svg>
+  <!-- STRIP VIEW -->
+  <div id="stripView" style="display:none;flex-direction:column;align-items:center;gap:0.75rem;width:100%;overflow-y:auto;max-height:60svh">
+    <div class="strip-wrapper" id="stripWrapper">
+      <div class="strip-header">
+        <svg class="strip-branch-l" viewBox="0 0 90 140" fill="none">
+          <path d="M78,135 Q60,90 45,60 Q30,30 18,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
+          <path d="M45,60 Q20,50 8,35 Q28,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
+          <path d="M45,60 Q22,72 12,60 Q30,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
+          <path d="M60,90 Q36,82 24,66 Q44,70 60,90Z" fill="#4a7c4a" opacity="0.65"/>
+          <path d="M30,30 Q10,22 4,8 Q20,14 30,30Z" fill="#3a7a3a" opacity="0.6"/>
+          <circle cx="18" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
+          <circle cx="8" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
+        </svg>
+        <svg class="strip-branch-r" viewBox="0 0 90 140" fill="none">
+          <path d="M12,135 Q30,90 45,60 Q60,30 72,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
+          <path d="M45,60 Q70,50 82,35 Q62,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
+          <path d="M45,60 Q68,72 78,60 Q60,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
+          <path d="M30,90 Q54,82 66,66 Q46,70 30,90Z" fill="#4a7c4a" opacity="0.65"/>
+          <path d="M60,30 Q80,22 86,8 Q70,14 60,30Z" fill="#3a7a3a" opacity="0.6"/>
+          <circle cx="72" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
+          <circle cx="82" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
+        </svg>
+        <div class="strip-header-text">
+          <div class="strip-header-name">Adam & Kelvin</div>
+          <div class="strip-header-date">May 23 · 2026</div>
         </div>
       </div>
+      <div class="strip-footer">
+        <svg class="strip-corner-bl" viewBox="0 0 80 80" fill="none"><path d="M5,75 Q5,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/><path d="M5,55 Q-5,38 5,22 Q14,36 5,55Z" fill="#4a7c4a" opacity="0.6"/><path d="M20,28 Q10,14 18,4 Q24,16 20,28Z" fill="#4a7c4a" opacity="0.55"/><circle cx="5" cy="75" r="2" fill="#b8965a" opacity="0.5"/></svg>
+        <svg class="strip-corner-br" viewBox="0 0 80 80" fill="none"><path d="M75,75 Q75,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/><path d="M75,55 Q85,38 75,22 Q66,36 75,55Z" fill="#4a7c4a" opacity="0.6"/><path d="M60,28 Q70,14 62,4 Q56,16 60,28Z" fill="#4a7c4a" opacity="0.55"/><circle cx="75" cy="75" r="2" fill="#b8965a" opacity="0.5"/></svg>
+        <div class="strip-footer-inner">
+          <div class="strip-footer-loc">Chandler, Texas</div>
+          <div class="strip-floral-divider"><svg viewBox="0 0 120 14" fill="none" style="width:100px;height:12px"><line x1="0" y1="7" x2="42" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/><circle cx="52" cy="7" r="2" fill="#b8965a" opacity="0.6"/><circle cx="60" cy="7" r="3" fill="#b8965a" opacity="0.8"/><circle cx="68" cy="7" r="2" fill="#b8965a" opacity="0.6"/><line x1="78" y1="7" x2="120" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/><path d="M60,4 Q55,1 52,3 Q56,5 60,4Z" fill="#4a7c4a" opacity="0.6"/><path d="M60,4 Q65,1 68,3 Q64,5 60,4Z" fill="#4a7c4a" opacity="0.6"/></svg></div>
+        </div>
+      </div>
+      <svg class="strip-vine-l" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none"><path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/><path d="M11,80 Q2,70 1,58 Q9,63 11,80Z" fill="#4a7c4a" opacity="0.35"/><path d="M11,160 Q2,150 0,138 Q9,143 11,160Z" fill="#4a7c4a" opacity="0.3"/><path d="M11,240 Q20,230 21,218 Q13,223 11,240Z" fill="#3a7a3a" opacity="0.3"/><path d="M11,320 Q2,310 0,298 Q9,303 11,320Z" fill="#4a7c4a" opacity="0.28"/><path d="M11,400 Q20,390 21,378 Q13,383 11,400Z" fill="#3a7a3a" opacity="0.25"/></svg>
+      <svg class="strip-vine-r" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none"><path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/><path d="M11,120 Q2,110 1,98 Q9,103 11,120Z" fill="#4a7c4a" opacity="0.3"/><path d="M11,200 Q2,190 0,178 Q9,183 11,200Z" fill="#4a7c4a" opacity="0.28"/><path d="M11,280 Q20,270 21,258 Q13,263 11,280Z" fill="#3a7a3a" opacity="0.3"/><path d="M11,360 Q2,350 0,338 Q9,343 11,360Z" fill="#4a7c4a" opacity="0.28"/><path d="M11,440 Q20,430 21,418 Q13,423 11,440Z" fill="#3a7a3a" opacity="0.25"/></svg>
     </div>
-
-    <!-- full-height side vines -->
-    <svg class="strip-vine-l" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none">
-      <path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/>
-      <path d="M11,80 Q2,70 1,58 Q9,63 11,80Z" fill="#4a7c4a" opacity="0.35"/>
-      <path d="M11,80 Q20,70 21,58 Q13,63 11,80Z" fill="#3a7a3a" opacity="0.25"/>
-      <path d="M11,160 Q2,150 0,138 Q9,143 11,160Z" fill="#4a7c4a" opacity="0.3"/>
-      <path d="M11,240 Q20,230 21,218 Q13,223 11,240Z" fill="#3a7a3a" opacity="0.3"/>
-      <path d="M11,320 Q2,310 0,298 Q9,303 11,320Z" fill="#4a7c4a" opacity="0.28"/>
-      <path d="M11,400 Q20,390 21,378 Q13,383 11,400Z" fill="#3a7a3a" opacity="0.25"/>
-      <path d="M11,480 Q2,470 0,458 Q9,463 11,480Z" fill="#4a7c4a" opacity="0.28"/>
-    </svg>
-    <svg class="strip-vine-r" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none">
-      <path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/>
-      <path d="M11,120 Q2,110 1,98 Q9,103 11,120Z" fill="#4a7c4a" opacity="0.3"/>
-      <path d="M11,120 Q20,110 21,98 Q13,103 11,120Z" fill="#3a7a3a" opacity="0.25"/>
-      <path d="M11,200 Q2,190 0,178 Q9,183 11,200Z" fill="#4a7c4a" opacity="0.28"/>
-      <path d="M11,280 Q20,270 21,258 Q13,263 11,280Z" fill="#3a7a3a" opacity="0.3"/>
-      <path d="M11,360 Q2,350 0,338 Q9,343 11,360Z" fill="#4a7c4a" opacity="0.28"/>
-      <path d="M11,440 Q20,430 21,418 Q13,423 11,440Z" fill="#3a7a3a" opacity="0.25"/>
-      <path d="M11,520 Q2,510 0,498 Q9,503 11,520Z" fill="#4a7c4a" opacity="0.28"/>
-    </svg>
-
   </div>
-  <div class="action-row" style="margin-top:0.25rem">
+
+  <div class="action-row">
     <button class="btn-primary" onclick="saveStrip()">Save 📥</button>
     <button class="btn-primary" onclick="shareStrip()">Share 🌿</button>
   </div>
-  <button class="btn-secondary" style="margin-top:0.5rem" onclick="retakeAll()">Start Over</button>
+  <button class="btn-secondary" style="margin-top:0.4rem" onclick="retakeAll()">Start Over</button>
 </div>
 
 <script>
@@ -605,17 +614,22 @@ function capturePhoto(){
 
 // ── FINAL STRIP ───────────────────────────────
 function buildFinalStrip(){
+  // build carousel
+  buildCarousel();
+
+  // build strip photos
   var wrapper=document.getElementById('stripWrapper');
   wrapper.querySelectorAll('.strip-photo').forEach(function(e){e.remove();});
   var header=wrapper.querySelector('.strip-header');
   photos.forEach(function(src){
     var img=document.createElement('img');img.src=src;img.className='strip-photo';
-    // insert after header
     header.insertAdjacentElement('afterend',img);
   });
+
+  // show carousel tab by default
+  switchTab('photos');
   showScreen('strip-screen');
   if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
-  // auto-upload after short delay so strip renders first
   setTimeout(autoUploadStrip, 800);
 }
 
@@ -851,6 +865,72 @@ function showScreen(id){
     s.classList.toggle('hidden',s.id!==id);
   });
 }
+
+// ── CAROUSEL ─────────────────────────────────
+var carouselIndex = 0;
+
+function buildCarousel(){
+  var track = document.getElementById('carouselTrack');
+  var dots  = document.getElementById('carouselDots');
+  track.innerHTML = '';
+  dots.innerHTML  = '';
+  photos.forEach(function(src, i){
+    var img = document.createElement('img');
+    img.src = src;
+    img.className = 'carousel-slide';
+    track.appendChild(img);
+    var dot = document.createElement('div');
+    dot.className = 'carousel-dot' + (i===0?' active':'');
+    dot.onclick = (function(idx){ return function(){ goToSlide(idx); }; })(i);
+    dots.appendChild(dot);
+  });
+  carouselIndex = 0;
+  updateCarousel();
+}
+
+function goToSlide(idx){
+  carouselIndex = Math.max(0, Math.min(photos.length-1, idx));
+  updateCarousel();
+}
+function carouselNext(){ goToSlide(carouselIndex+1); }
+function carouselPrev(){ goToSlide(carouselIndex-1); }
+
+function updateCarousel(){
+  var track = document.getElementById('carouselTrack');
+  track.style.transform = 'translateX(-' + (carouselIndex*100) + '%)';
+  document.getElementById('carouselCount').textContent = (carouselIndex+1) + ' / ' + photos.length;
+  document.querySelectorAll('.carousel-dot').forEach(function(d,i){
+    d.classList.toggle('active', i===carouselIndex);
+  });
+}
+
+// swipe support
+(function(){
+  var startX=0, dragging=false;
+  function onStart(e){ startX = e.touches ? e.touches[0].clientX : e.clientX; dragging=true; }
+  function onEnd(e){
+    if(!dragging) return; dragging=false;
+    var endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    var diff = startX - endX;
+    if(Math.abs(diff)>40){ diff>0 ? carouselNext() : carouselPrev(); }
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var wrap = document.querySelector('.carousel-wrap');
+    if(wrap){
+      wrap.addEventListener('touchstart', onStart, {passive:true});
+      wrap.addEventListener('touchend', onEnd, {passive:true});
+    }
+  });
+})();
+
+function switchTab(tab){
+  var showPhotos = tab==='photos';
+  document.getElementById('carouselView').style.display = showPhotos ? 'flex' : 'none';
+  document.getElementById('stripView').style.display    = showPhotos ? 'none' : 'flex';
+  document.getElementById('tabPhotos').classList.toggle('active', showPhotos);
+  document.getElementById('tabStrip').classList.toggle('active', !showPhotos);
+}
+
 </script>
 </body>
 </html>
