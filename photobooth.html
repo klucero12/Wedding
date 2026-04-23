@@ -126,18 +126,80 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
 #strip-screen{overflow-y:auto;gap:1.25rem;padding:1.25rem 1rem 2rem}
 .strip-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,5.5vw,30px);font-style:italic;color:var(--cream);text-align:center;font-weight:300}
 .strip-wrapper{
-  position:relative;background:var(--cream);border-radius:3px;
-  padding:clamp(9px,2.2vw,14px) clamp(9px,2.2vw,14px) clamp(22px,4.5vw,32px);
-  display:flex;flex-direction:column;gap:clamp(5px,1.2vw,8px);
-  width:min(260px,68vw);box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  position:relative;
+  background:linear-gradient(160deg,#f8f4ee 0%,#faf7f2 50%,#f5f0e8 100%);
+  border-radius:3px;
+  padding:0;
+  display:flex;flex-direction:column;
+  gap:0;
+  width:min(260px,68vw);
+  box-shadow:0 20px 60px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(74,124,74,0.12);
+  overflow:hidden;
 }
-.strip-photo{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-radius:1px}
-.strip-footer{text-align:center;padding-top:clamp(4px,1vw,8px);display:flex;flex-direction:column;gap:3px}
-.strip-footer-name{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,3.2vw,17px);font-style:italic;color:var(--dark-green);font-weight:400}
-.strip-footer-date{font-family:'Josefin Sans',sans-serif;font-size:clamp(6px,1.8vw,8px);letter-spacing:2px;color:var(--light-green);text-transform:uppercase}
-.strip-leaf-l,.strip-leaf-r{position:absolute;bottom:clamp(20px,4.5vw,30px);opacity:0.22;pointer-events:none}
-.strip-leaf-l{left:clamp(3px,1vw,8px)}
-.strip-leaf-r{right:clamp(3px,1vw,8px)}
+/* header */
+.strip-header{
+  position:relative;
+  padding:clamp(8px,2vw,14px) clamp(20px,5vw,28px) clamp(6px,1.5vw,10px);
+  text-align:center;
+  background:linear-gradient(to bottom,rgba(212,230,212,0.35),transparent);
+  border-bottom:1px solid rgba(74,124,74,0.1);
+}
+.strip-branch-l,.strip-branch-r{
+  position:absolute;top:-4px;
+  width:clamp(55px,14vw,80px);height:clamp(70px,17vw,105px);
+  pointer-events:none;
+}
+.strip-branch-l{left:-4px}
+.strip-branch-r{right:-4px;transform:scaleX(-1) scaleX(1)}
+.strip-header-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(13px,3.5vw,18px);
+  font-style:italic;font-weight:400;
+  color:var(--dark-green);line-height:1.2;
+}
+.strip-header-date{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:clamp(6px,1.6vw,8px);
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--light-green);margin-top:2px;
+}
+/* photos */
+.strip-photo{
+  width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
+  border-top:1px solid rgba(74,124,74,0.08);
+  border-bottom:1px solid rgba(74,124,74,0.08);
+}
+/* side vines */
+.strip-vine-l,.strip-vine-r{
+  position:absolute;top:0;bottom:0;
+  width:clamp(12px,3vw,18px);
+  pointer-events:none;z-index:2;
+}
+.strip-vine-l{left:0}
+.strip-vine-r{right:0}
+/* footer */
+.strip-footer{
+  position:relative;
+  padding:clamp(8px,2vw,12px) clamp(20px,5vw,28px);
+  text-align:center;
+  background:linear-gradient(to bottom,transparent,rgba(212,230,212,0.3));
+  border-top:1px solid rgba(74,124,74,0.1);
+}
+.strip-corner-bl,.strip-corner-br{
+  position:absolute;bottom:0;
+  width:clamp(40px,10vw,60px);height:clamp(40px,10vw,60px);
+  pointer-events:none;opacity:0.55;
+}
+.strip-corner-bl{left:0}
+.strip-corner-br{right:0}
+.strip-footer-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
+.strip-footer-loc{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:clamp(6px,1.5vw,8px);
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--light-green);
+}
+.strip-floral-divider{display:flex;justify-content:center;margin-top:2px}
 .action-row{display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:340px}
 
 /* STATUS MSG */
@@ -239,24 +301,112 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
 <!-- STRIP -->
 <div class="screen hidden" id="strip-screen">
   <div class="strip-title" style="margin-bottom:0.25rem">Your Photo Strip 🌿</div>
+  <!-- upload status bar -->
+  <div id="uploadStatus" style="display:none;font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);text-align:center;padding:0.4rem 1rem;background:rgba(143,174,143,0.12);border:1px solid rgba(143,174,143,0.2);border-radius:2px;max-width:min(260px,68vw);margin-bottom:0.25rem"></div>
   <div class="strip-wrapper" id="stripWrapper">
-    <div class="strip-footer">
-      <div class="strip-footer-name">Adam & Kelvin</div>
-      <div class="strip-footer-date">May 23 · 2026 · Chandler, Texas</div>
+
+    <!-- TOP botanical header -->
+    <div class="strip-header">
+      <!-- large left branch -->
+      <svg class="strip-branch-l" viewBox="0 0 90 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M78,135 Q60,90 45,60 Q30,30 18,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
+        <path d="M45,60 Q20,50 8,35 Q28,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
+        <path d="M45,60 Q22,72 12,60 Q30,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
+        <path d="M60,90 Q36,82 24,66 Q44,70 60,90Z" fill="#4a7c4a" opacity="0.65"/>
+        <path d="M60,90 Q38,102 28,92 Q46,87 60,90Z" fill="#2d5a2d" opacity="0.45"/>
+        <path d="M30,30 Q10,22 4,8 Q20,14 30,30Z" fill="#3a7a3a" opacity="0.6"/>
+        <path d="M30,30 Q14,40 6,32 Q20,27 30,30Z" fill="#4a7c4a" opacity="0.4"/>
+        <!-- small berries -->
+        <circle cx="18" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
+        <circle cx="22" cy="10" r="1.8" fill="#b8965a" opacity="0.5"/>
+        <circle cx="8" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
+      </svg>
+      <!-- large right branch -->
+      <svg class="strip-branch-r" viewBox="0 0 90 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12,135 Q30,90 45,60 Q60,30 72,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
+        <path d="M45,60 Q70,50 82,35 Q62,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
+        <path d="M45,60 Q68,72 78,60 Q60,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
+        <path d="M30,90 Q54,82 66,66 Q46,70 30,90Z" fill="#4a7c4a" opacity="0.65"/>
+        <path d="M30,90 Q52,102 62,92 Q44,87 30,90Z" fill="#2d5a2d" opacity="0.45"/>
+        <path d="M60,30 Q80,22 86,8 Q70,14 60,30Z" fill="#3a7a3a" opacity="0.6"/>
+        <path d="M60,30 Q76,40 84,32 Q70,27 60,30Z" fill="#4a7c4a" opacity="0.4"/>
+        <circle cx="72" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
+        <circle cx="68" cy="10" r="1.8" fill="#b8965a" opacity="0.5"/>
+        <circle cx="82" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
+      </svg>
+      <div class="strip-header-text">
+        <div class="strip-header-name">Adam & Kelvin</div>
+        <div class="strip-header-date">May 23 · 2026</div>
+      </div>
     </div>
-    <svg class="strip-leaf-l" width="16" height="50" viewBox="0 0 16 50" fill="none">
-      <path d="M8,48 Q8,28 8,5" stroke="#2d5a2d" stroke-width="0.8"/>
-      <path d="M8,35 Q2,27 1,18 Q7,22 8,35Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
-      <path d="M8,22 Q2,15 1,8 Q7,11 8,22Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
+
+    <!-- photos injected here by JS -->
+
+    <!-- BOTTOM botanical footer -->
+    <div class="strip-footer">
+      <!-- bottom left botanical corner -->
+      <svg class="strip-corner-bl" viewBox="0 0 80 80" fill="none">
+        <path d="M5,75 Q5,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/>
+        <path d="M5,55 Q-5,38 5,22 Q14,36 5,55Z" fill="#4a7c4a" opacity="0.6"/>
+        <path d="M5,55 Q18,50 22,38 Q10,44 5,55Z" fill="#3a7a3a" opacity="0.5"/>
+        <path d="M20,28 Q10,14 18,4 Q24,16 20,28Z" fill="#4a7c4a" opacity="0.55"/>
+        <path d="M20,28 Q32,24 34,14 Q24,18 20,28Z" fill="#2d5a2d" opacity="0.45"/>
+        <circle cx="5" cy="75" r="2" fill="#b8965a" opacity="0.5"/>
+        <circle cx="40" cy="5" r="2" fill="#b8965a" opacity="0.5"/>
+      </svg>
+      <!-- bottom right botanical corner -->
+      <svg class="strip-corner-br" viewBox="0 0 80 80" fill="none">
+        <path d="M75,75 Q75,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/>
+        <path d="M75,55 Q85,38 75,22 Q66,36 75,55Z" fill="#4a7c4a" opacity="0.6"/>
+        <path d="M75,55 Q62,50 58,38 Q70,44 75,55Z" fill="#3a7a3a" opacity="0.5"/>
+        <path d="M60,28 Q70,14 62,4 Q56,16 60,28Z" fill="#4a7c4a" opacity="0.55"/>
+        <path d="M60,28 Q48,24 46,14 Q56,18 60,28Z" fill="#2d5a2d" opacity="0.45"/>
+        <circle cx="75" cy="75" r="2" fill="#b8965a" opacity="0.5"/>
+        <circle cx="40" cy="5" r="2" fill="#b8965a" opacity="0.5"/>
+      </svg>
+      <div class="strip-footer-inner">
+        <div class="strip-footer-loc">Chandler, Texas</div>
+        <!-- small floral divider -->
+        <div class="strip-floral-divider">
+          <svg viewBox="0 0 120 14" fill="none" style="width:100px;height:12px">
+            <line x1="0" y1="7" x2="42" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/>
+            <circle cx="52" cy="7" r="2" fill="#b8965a" opacity="0.6"/>
+            <circle cx="60" cy="7" r="3" fill="#b8965a" opacity="0.8"/>
+            <circle cx="68" cy="7" r="2" fill="#b8965a" opacity="0.6"/>
+            <line x1="78" y1="7" x2="120" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/>
+            <!-- tiny leaves around center -->
+            <path d="M60,4 Q55,1 52,3 Q56,5 60,4Z" fill="#4a7c4a" opacity="0.6"/>
+            <path d="M60,4 Q65,1 68,3 Q64,5 60,4Z" fill="#4a7c4a" opacity="0.6"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- full-height side vines -->
+    <svg class="strip-vine-l" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none">
+      <path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/>
+      <path d="M11,80 Q2,70 1,58 Q9,63 11,80Z" fill="#4a7c4a" opacity="0.35"/>
+      <path d="M11,80 Q20,70 21,58 Q13,63 11,80Z" fill="#3a7a3a" opacity="0.25"/>
+      <path d="M11,160 Q2,150 0,138 Q9,143 11,160Z" fill="#4a7c4a" opacity="0.3"/>
+      <path d="M11,240 Q20,230 21,218 Q13,223 11,240Z" fill="#3a7a3a" opacity="0.3"/>
+      <path d="M11,320 Q2,310 0,298 Q9,303 11,320Z" fill="#4a7c4a" opacity="0.28"/>
+      <path d="M11,400 Q20,390 21,378 Q13,383 11,400Z" fill="#3a7a3a" opacity="0.25"/>
+      <path d="M11,480 Q2,470 0,458 Q9,463 11,480Z" fill="#4a7c4a" opacity="0.28"/>
     </svg>
-    <svg class="strip-leaf-r" width="16" height="50" viewBox="0 0 16 50" fill="none">
-      <path d="M8,48 Q8,28 8,5" stroke="#2d5a2d" stroke-width="0.8"/>
-      <path d="M8,35 Q14,27 15,18 Q9,22 8,35Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
-      <path d="M8,22 Q14,15 15,8 Q9,11 8,22Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
+    <svg class="strip-vine-r" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none">
+      <path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/>
+      <path d="M11,120 Q2,110 1,98 Q9,103 11,120Z" fill="#4a7c4a" opacity="0.3"/>
+      <path d="M11,120 Q20,110 21,98 Q13,103 11,120Z" fill="#3a7a3a" opacity="0.25"/>
+      <path d="M11,200 Q2,190 0,178 Q9,183 11,200Z" fill="#4a7c4a" opacity="0.28"/>
+      <path d="M11,280 Q20,270 21,258 Q13,263 11,280Z" fill="#3a7a3a" opacity="0.3"/>
+      <path d="M11,360 Q2,350 0,338 Q9,343 11,360Z" fill="#4a7c4a" opacity="0.28"/>
+      <path d="M11,440 Q20,430 21,418 Q13,423 11,440Z" fill="#3a7a3a" opacity="0.25"/>
+      <path d="M11,520 Q2,510 0,498 Q9,503 11,520Z" fill="#4a7c4a" opacity="0.28"/>
     </svg>
+
   </div>
   <div class="action-row" style="margin-top:0.25rem">
-    <button class="btn-primary" onclick="saveStrip()">Save to Photos</button>
+    <button class="btn-primary" onclick="saveStrip()">Save 📥</button>
     <button class="btn-primary" onclick="shareStrip()">Share 🌿</button>
   </div>
   <button class="btn-secondary" style="margin-top:0.5rem" onclick="retakeAll()">Start Over</button>
@@ -457,13 +607,43 @@ function capturePhoto(){
 function buildFinalStrip(){
   var wrapper=document.getElementById('stripWrapper');
   wrapper.querySelectorAll('.strip-photo').forEach(function(e){e.remove();});
-  var footer=wrapper.querySelector('.strip-footer');
+  var header=wrapper.querySelector('.strip-header');
   photos.forEach(function(src){
     var img=document.createElement('img');img.src=src;img.className='strip-photo';
-    wrapper.insertBefore(img,footer);
+    // insert after header
+    header.insertAdjacentElement('afterend',img);
   });
   showScreen('strip-screen');
   if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
+  // auto-upload after short delay so strip renders first
+  setTimeout(autoUploadStrip, 800);
+}
+
+// ── AUTO UPLOAD TO GOOGLE DRIVE ───────────────
+async function autoUploadStrip(){
+  var statusEl = document.getElementById('uploadStatus');
+  statusEl.style.display='block';
+  statusEl.textContent = '🌿 Saving to wedding album…';
+
+  try {
+    var dataUrl = await renderStripCanvas();
+    var base64 = dataUrl.split(',')[1];
+
+    var response = await fetch('https://script.google.com/macros/s/AKfycbx6SCcEQIolG0xSj3QIiBF9eXf-dBtTaaqN2y5_k7bVbOXl_zLmQ0dxHDzmco-ETszS/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'image=' + encodeURIComponent(dataUrl)
+    });
+
+    // no-cors means we can't read response, but if no error thrown it worked
+    statusEl.textContent = '✓ Saved to Adam & Kelvin's album!';
+    statusEl.style.color = 'var(--pale-sage)';
+    setTimeout(function(){ statusEl.style.opacity='0'; statusEl.style.transition='opacity 1s'; }, 3000);
+  } catch(err) {
+    statusEl.textContent = 'Could not auto-save — please use Save button below.';
+    statusEl.style.color = 'rgba(255,150,150,0.8)';
+  }
 }
 
 // ── SAVE ─────────────────────────────────────
@@ -504,34 +684,139 @@ async function shareStrip(){
 // ── RENDER CANVAS ─────────────────────────────
 function renderStripCanvas(){
   return new Promise(function(resolve){
-    var cw=620,ph=800,gap=10,pad=16,footerH=68;
-    var ch=pad+(ph+gap)*4-gap+footerH+pad;
-    var c=document.createElement('canvas');c.width=cw;c.height=ch;
+    var cw=640, ph=760, gap=6, headerH=100, footerH=88, pad=18;
+    var ch = headerH + (ph+gap)*4 - gap + footerH;
+    var c=document.createElement('canvas'); c.width=cw; c.height=ch;
     var ctx=c.getContext('2d');
-    ctx.fillStyle='#faf7f2';ctx.fillRect(0,0,cw,ch);
-    ctx.strokeStyle='rgba(74,124,74,0.18)';ctx.lineWidth=2;ctx.strokeRect(5,5,cw-10,ch-10);
+
+    // cream background with subtle gradient
+    var grad = ctx.createLinearGradient(0,0,cw,ch);
+    grad.addColorStop(0,'#f8f4ee'); grad.addColorStop(0.5,'#faf7f2'); grad.addColorStop(1,'#f5f0e8');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,cw,ch);
+
+    // outer botanical border - double line
+    ctx.strokeStyle='rgba(74,124,74,0.25)'; ctx.lineWidth=2;
+    ctx.strokeRect(6,6,cw-12,ch-12);
+    ctx.strokeStyle='rgba(74,124,74,0.12)'; ctx.lineWidth=1;
+    ctx.strokeRect(10,10,cw-20,ch-20);
+
+    // ── HEADER ───────────────────────────────
+    // header bg
+    var hgrad=ctx.createLinearGradient(0,0,0,headerH);
+    hgrad.addColorStop(0,'rgba(212,230,212,0.4)'); hgrad.addColorStop(1,'rgba(212,230,212,0)');
+    ctx.fillStyle=hgrad; ctx.fillRect(0,0,cw,headerH);
+    ctx.strokeStyle='rgba(74,124,74,0.15)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(0,headerH); ctx.lineTo(cw,headerH); ctx.stroke();
+
+    // draw botanical branches top-left
+    function drawBranch(ctx, x, y, flip){
+      ctx.save();
+      if(flip){ctx.translate(x*2,0);ctx.scale(-1,1);}
+      ctx.strokeStyle='#2d5a2d'; ctx.lineWidth=1.6; ctx.globalAlpha=0.7;
+      ctx.beginPath(); ctx.moveTo(x+60,y+95); ctx.quadraticCurveTo(x+40,y+55,x+28,y+30); ctx.quadraticCurveTo(x+18,y+15,x+10,y+2); ctx.stroke();
+      // leaves
+      function leaf(ax,ay,bx,by,cx,cy,op){
+        ctx.beginPath(); ctx.moveTo(ax,ay); ctx.quadraticCurveTo(bx,by,cx,cy); ctx.quadraticCurveTo(bx+4,ay+4,ax,ay); ctx.closePath();
+        ctx.fillStyle='#3a7a3a'; ctx.globalAlpha=op; ctx.fill();
+      }
+      leaf(x+28,y+30, x+8,y+22, x+2,y+10, 0.6);
+      leaf(x+28,y+30, x+30,y+46, x+18,y+44, 0.45);
+      leaf(x+42,y+55, x+22,y+48, x+14,y+36, 0.55);
+      leaf(x+42,y+55, x+44,y+70, x+32,y+68, 0.4);
+      leaf(x+18,y+15, x+4,y+10, x+2,y+2, 0.5);
+      // berries
+      ctx.globalAlpha=0.65;
+      ctx.beginPath(); ctx.arc(x+10,y+3,3,0,Math.PI*2); ctx.fillStyle='#b8965a'; ctx.fill();
+      ctx.beginPath(); ctx.arc(x+15,y+8,2,0,Math.PI*2); ctx.fillStyle='#b8965a'; ctx.fill();
+      ctx.restore();
+    }
+    drawBranch(ctx, 12, 2, false);
+    drawBranch(ctx, cw-72, 2, true);
+
+    // header text
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#1a2f1a'; ctx.textAlign='center';
+    ctx.font='italic 400 28px Georgia,serif';
+    ctx.fillText('Adam & Kelvin', cw/2, 48);
+    ctx.fillStyle='#4a7c4a';
+    ctx.font='300 11px sans-serif';
+    ctx.fillText('MAY 23  ·  2026', cw/2, 68);
+    // small gold dots
+    [cw/2-30,cw/2,cw/2+30].forEach(function(x){
+      ctx.beginPath(); ctx.arc(x,82,2,0,Math.PI*2);
+      ctx.fillStyle='rgba(184,150,90,0.6)'; ctx.fill();
+    });
+
+    // ── PHOTOS ───────────────────────────────
     var loaded=0;
     photos.forEach(function(src,i){
       var img=new Image();
       img.onload=function(){
-        ctx.drawImage(img,pad,pad+i*(ph+gap),cw-pad*2,ph);
+        var py = headerH + i*(ph+gap);
+        // thin green line between photos
+        if(i>0){
+          ctx.fillStyle='rgba(74,124,74,0.12)';
+          ctx.fillRect(pad, py-gap, cw-pad*2, gap);
+        }
+        ctx.drawImage(img, pad, py, cw-pad*2, ph);
+
+        // side vine marks along photo edges
+        ctx.fillStyle='rgba(45,90,45,0.18)';
+        ctx.fillRect(0, py, pad-2, ph);
+        ctx.fillRect(cw-pad+2, py, pad-2, ph);
+
         loaded++;
         if(loaded===photos.length){
-          var fy=ch-footerH;
-          ctx.fillStyle='rgba(212,230,212,0.15)';ctx.fillRect(0,fy,cw,footerH);
-          ctx.strokeStyle='rgba(74,124,74,0.12)';ctx.lineWidth=1;
-          ctx.beginPath();ctx.moveTo(0,fy);ctx.lineTo(cw,fy);ctx.stroke();
-          ctx.fillStyle='#1a2f1a';
-          ctx.font='italic 400 21px Georgia,serif';
-          ctx.textAlign='center';ctx.fillText('Adam & Kelvin',cw/2,fy+25);
-          ctx.fillStyle='#4a7c4a';
-          ctx.font='300 9px sans-serif';
-          ctx.fillText('MAY 23 · 2026 · CHANDLER, TEXAS',cw/2,fy+44);
-          [cw/2-70,cw/2,cw/2+70].forEach(function(x){
-            ctx.beginPath();ctx.arc(x,fy+58,2,0,Math.PI*2);
-            ctx.fillStyle='rgba(184,150,90,0.5)';ctx.fill();
+          // ── FOOTER ───────────────────────────
+          var fy = ch - footerH;
+          var fgrad=ctx.createLinearGradient(0,fy,0,ch);
+          fgrad.addColorStop(0,'rgba(212,230,212,0)'); fgrad.addColorStop(1,'rgba(212,230,212,0.45)');
+          ctx.fillStyle=fgrad; ctx.fillRect(0,fy,cw,footerH);
+          ctx.strokeStyle='rgba(74,124,74,0.15)'; ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(0,fy); ctx.lineTo(cw,fy); ctx.stroke();
+
+          // botanical corner bottom-left
+          function cornerLeaf(ctx, ox, oy, flip){
+            ctx.save();
+            if(flip){ctx.translate(ox*2,0);ctx.scale(-1,1);}
+            ctx.strokeStyle='#2d5a2d'; ctx.lineWidth=1.1; ctx.globalAlpha=0.5;
+            ctx.beginPath(); ctx.moveTo(ox+4,oy+72); ctx.quadraticCurveTo(ox+4,oy+40,ox+36,oy+8); ctx.stroke();
+            function sm(ax,ay,bx,by,cx,cy,op){
+              ctx.beginPath(); ctx.moveTo(ax,ay); ctx.quadraticCurveTo(bx,by,cx,cy); ctx.quadraticCurveTo(bx+2,ay+2,ax,ay); ctx.closePath();
+              ctx.fillStyle='#4a7c4a'; ctx.globalAlpha=op; ctx.fill();
+            }
+            sm(ox+4,oy+50, ox-8,oy+42, ox-10,oy+32, 0.45);
+            sm(ox+4,oy+50, ox+16,oy+46, ox+18,oy+36, 0.35);
+            sm(ox+18,oy+28, ox+8,oy+18, ox+10,oy+10, 0.4);
+            ctx.restore();
+          }
+          cornerLeaf(ctx, 8, fy+2, false);
+          cornerLeaf(ctx, cw-44, fy+2, true);
+
+          // floral divider line
+          ctx.globalAlpha=1;
+          var lx1=cw/2-80, lx2=cw/2-28;
+          ctx.strokeStyle='rgba(143,174,143,0.6)'; ctx.lineWidth=0.7;
+          ctx.beginPath(); ctx.moveTo(lx1,fy+22); ctx.lineTo(lx2,fy+22); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(cw-lx1,fy+22); ctx.lineTo(cw-lx2,fy+22); ctx.stroke();
+          [cw/2-16,cw/2,cw/2+16].forEach(function(x,i){
+            ctx.beginPath(); ctx.arc(x,fy+22,i===1?3:2,0,Math.PI*2);
+            ctx.fillStyle='rgba(184,150,90,'+(i===1?'0.8':'0.55')+')'; ctx.fill();
           });
-          resolve(c.toDataURL('image/jpeg',0.92));
+          // tiny leaves around center berry
+          ctx.fillStyle='#4a7c4a'; ctx.globalAlpha=0.55;
+          ctx.beginPath(); ctx.moveTo(cw/2,fy+19); ctx.quadraticCurveTo(cw/2-12,fy+15,cw/2-16,fy+19); ctx.quadraticCurveTo(cw/2-8,fy+21,cw/2,fy+19); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(cw/2,fy+19); ctx.quadraticCurveTo(cw/2+12,fy+15,cw/2+16,fy+19); ctx.quadraticCurveTo(cw/2+8,fy+21,cw/2,fy+19); ctx.closePath(); ctx.fill();
+          ctx.globalAlpha=1;
+
+          ctx.fillStyle='#1a2f1a'; ctx.textAlign='center';
+          ctx.font='300 10px sans-serif';
+          ctx.fillText('CHANDLER, TEXAS', cw/2, fy+42);
+          ctx.fillStyle='rgba(74,124,74,0.5)';
+          ctx.font='300 8px sans-serif';
+          ctx.fillText('WITH LOVE · ALWAYS', cw/2, fy+60);
+
+          resolve(c.toDataURL('image/jpeg',0.93));
         }
       };
       img.src=src;
