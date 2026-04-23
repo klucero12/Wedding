@@ -622,26 +622,35 @@ function buildFinalStrip(){
 // ── AUTO UPLOAD TO GOOGLE DRIVE ───────────────
 async function autoUploadStrip(){
   var statusEl = document.getElementById('uploadStatus');
-  statusEl.style.display='block';
-  statusEl.textContent = '🌿 Saving to wedding album…';
+  statusEl.style.display = 'block';
+  statusEl.style.opacity = '1';
+  statusEl.style.transition = '';
+  statusEl.style.color = 'var(--sage)';
+  statusEl.textContent = 'Saving to wedding album...';
 
   try {
     var dataUrl = await renderStripCanvas();
-    var base64 = dataUrl.split(',')[1];
 
-    var response = await fetch('https://script.google.com/macros/s/AKfycbx6SCcEQIolG0xSj3QIiBF9eXf-dBtTaaqN2y5_k7bVbOXl_zLmQ0dxHDzmco-ETszS/exec', {
+    // Google Apps Script requires form data
+    var formData = new FormData();
+    formData.append('image', dataUrl);
+    formData.append('name', 'photobooth-' + Date.now() + '.jpg');
+
+    await fetch('https://script.google.com/macros/s/AKfycbx6SCcEQIolG0xSj3QIiBF9eXf-dBtTaaqN2y5_k7bVbOXl_zLmQ0dxHDzmco-ETszS/exec', {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'image=' + encodeURIComponent(dataUrl)
+      body: formData
     });
 
-    // no-cors means we can't read response, but if no error thrown it worked
-    statusEl.textContent = '✓ Saved to Adam & Kelvin's album!';
+    statusEl.textContent = 'Saved to Adam & Kelvin album!';
     statusEl.style.color = 'var(--pale-sage)';
-    setTimeout(function(){ statusEl.style.opacity='0'; statusEl.style.transition='opacity 1s'; }, 3000);
+    setTimeout(function(){
+      statusEl.style.transition = 'opacity 1.5s';
+      statusEl.style.opacity = '0';
+    }, 3500);
+
   } catch(err) {
-    statusEl.textContent = 'Could not auto-save — please use Save button below.';
+    statusEl.textContent = 'Auto-save failed — use Save button below';
     statusEl.style.color = 'rgba(255,150,150,0.8)';
   }
 }
