@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Adam & Kelvin · Photobooth</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+:root{
+  --cream:#faf7f2;--dark-green:#1a2f1a;--mid-green:#2d5a2d;
+  --light-green:#4a7c4a;--sage:#8fae8f;--pale-sage:#d4e6d4;--gold:#b8965a;
+}
+html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josefin Sans',sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased;position:fixed;top:0;left:0}
+
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem;z-index:10;transition:opacity 0.4s ease}
+.screen.hidden{opacity:0;pointer-events:none;z-index:1}
+
+/* LEAF BG */
+.leaf-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.leaf-bg svg{position:absolute;opacity:0.12}
+
+/* WELCOME */
+.welcome-title{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,9vw,64px);font-weight:300;font-style:italic;color:var(--cream);line-height:1;text-align:center}
+.welcome-amp{color:var(--gold)}
+.welcome-sub{font-size:clamp(9px,2.2vw,11px);letter-spacing:4px;text-transform:uppercase;color:var(--sage);margin-top:0.3rem;text-align:center}
+.welcome-divider{width:50px;height:1px;background:var(--gold)}
+
+.btn-primary{
+  padding:clamp(14px,3.5vw,18px) clamp(32px,8vw,52px);
+  border:1px solid var(--gold);color:var(--gold);background:transparent;
+  font-family:'Josefin Sans',sans-serif;font-size:clamp(11px,3vw,13px);
+  letter-spacing:4px;text-transform:uppercase;cursor:pointer;
+  border-radius:2px;transition:all 0.3s;-webkit-appearance:none;
+  -webkit-user-select:none;touch-action:manipulation;
+}
+.btn-primary:active{background:var(--gold);color:var(--dark-green)}
+.btn-secondary{
+  padding:clamp(10px,2.5vw,13px) clamp(20px,5vw,30px);
+  border:1px solid rgba(143,174,143,0.4);color:var(--sage);background:transparent;
+  font-family:'Josefin Sans',sans-serif;font-size:clamp(10px,2.5vw,11px);
+  letter-spacing:3px;text-transform:uppercase;cursor:pointer;
+  border-radius:2px;transition:all 0.3s;-webkit-appearance:none;
+  touch-action:manipulation;
+}
+.btn-secondary:active{border-color:var(--sage);color:var(--cream)}
+
+/* ERROR BOX */
+.error-box{
+  background:rgba(255,100,100,0.15);border:1px solid rgba(255,100,100,0.3);
+  border-radius:4px;padding:1rem 1.25rem;color:#ffaaaa;
+  font-size:clamp(11px,3vw,13px);letter-spacing:1px;line-height:1.7;
+  text-align:center;max-width:320px;display:none;
+}
+
+/* CAMERA */
+#camera-screen{padding:0;background:#000}
+#video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;transform:scaleX(-1);
+}
+.camera-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,25,10,0.55) 0%,transparent 18%,transparent 72%,rgba(10,25,10,0.75) 100%);
+  pointer-events:none;z-index:2;
+}
+.frame-corner{position:absolute;z-index:3;pointer-events:none;opacity:0.65}
+.frame-corner.tl{top:10px;left:10px}
+.frame-corner.tr{top:10px;right:10px;transform:scaleX(-1)}
+.frame-corner.bl{bottom:10px;left:10px;transform:scaleY(-1)}
+.frame-corner.br{bottom:10px;right:10px;transform:scale(-1)}
+.camera-top{
+  position:absolute;top:0;left:0;right:0;z-index:5;
+  padding:clamp(10px,3vw,18px) clamp(14px,4vw,22px);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.cam-title{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,4vw,20px);font-style:italic;color:var(--cream);font-weight:300}
+.shot-counter{display:flex;gap:6px;align-items:center}
+.shot-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--sage);background:transparent;transition:all 0.3s}
+.shot-dot.taken{background:var(--gold);border-color:var(--gold)}
+.shot-dot.next{border-color:var(--cream);animation:pulseDot 1s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{transform:scale(1)}50%{transform:scale(1.35);background:rgba(250,247,242,0.3)}}
+.strip-preview{
+  position:absolute;bottom:clamp(95px,18vw,120px);left:0;right:0;z-index:5;
+  display:flex;justify-content:center;gap:7px;padding:0 1rem;
+}
+.strip-thumb{
+  width:clamp(50px,12vw,68px);aspect-ratio:3/4;
+  border:1px solid rgba(143,174,143,0.4);border-radius:2px;
+  overflow:hidden;background:rgba(0,0,0,0.35);
+}
+.strip-thumb img{width:100%;height:100%;object-fit:cover}
+.strip-thumb.empty{display:flex;align-items:center;justify-content:center}
+.strip-thumb.empty::after{content:'';width:1px;height:55%;background:rgba(143,174,143,0.3)}
+.countdown-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:clamp(90px,28vw,160px);
+  font-weight:300;color:rgba(255,255,255,0.92);z-index:6;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;text-shadow:0 4px 30px rgba(0,0,0,0.6);
+}
+.countdown-num.show{opacity:1}
+.flash{position:absolute;inset:0;background:white;z-index:20;opacity:0;pointer-events:none}
+.camera-bottom{
+  position:absolute;bottom:0;left:0;right:0;z-index:5;
+  padding:clamp(14px,3.5vw,22px);
+  display:flex;align-items:center;justify-content:center;gap:2rem;
+}
+.shutter{
+  width:clamp(72px,19vw,92px);height:clamp(72px,19vw,92px);
+  border-radius:50%;border:3px solid var(--cream);
+  background:rgba(255,255,255,0.12);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);position:relative;touch-action:manipulation;
+}
+.shutter::after{
+  content:'';width:76%;height:76%;border-radius:50%;
+  background:var(--cream);transition:all 0.12s;
+}
+.shutter:active::after{transform:scale(0.86);background:var(--pale-sage)}
+.shutter.counting{pointer-events:none;border-color:var(--gold)}
+.shutter.counting::after{background:var(--gold)}
+
+/* STRIP SCREEN */
+#strip-screen{overflow-y:auto;gap:1.25rem;padding:1.25rem 1rem 2rem}
+.strip-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,5.5vw,30px);font-style:italic;color:var(--cream);text-align:center;font-weight:300}
+.strip-wrapper{
+  position:relative;background:var(--cream);border-radius:3px;
+  padding:clamp(9px,2.2vw,14px) clamp(9px,2.2vw,14px) clamp(22px,4.5vw,32px);
+  display:flex;flex-direction:column;gap:clamp(5px,1.2vw,8px);
+  width:min(260px,68vw);box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.strip-photo{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;border-radius:1px}
+.strip-footer{text-align:center;padding-top:clamp(4px,1vw,8px);display:flex;flex-direction:column;gap:3px}
+.strip-footer-name{font-family:'Cormorant Garamond',serif;font-size:clamp(12px,3.2vw,17px);font-style:italic;color:var(--dark-green);font-weight:400}
+.strip-footer-date{font-family:'Josefin Sans',sans-serif;font-size:clamp(6px,1.8vw,8px);letter-spacing:2px;color:var(--light-green);text-transform:uppercase}
+.strip-leaf-l,.strip-leaf-r{position:absolute;bottom:clamp(20px,4.5vw,30px);opacity:0.22;pointer-events:none}
+.strip-leaf-l{left:clamp(3px,1vw,8px)}
+.strip-leaf-r{right:clamp(3px,1vw,8px)}
+.action-row{display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:340px}
+
+/* STATUS MSG */
+.status-msg{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:rgba(26,47,26,0.92);border:1px solid var(--sage);
+  border-radius:4px;padding:1rem 1.5rem;color:var(--pale-sage);
+  font-size:13px;letter-spacing:2px;text-align:center;z-index:30;
+  pointer-events:none;opacity:0;transition:opacity 0.3s;
+}
+.status-msg.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="leaf-bg">
+  <svg width="260" height="340" style="top:-20px;left:-30px" viewBox="0 0 260 340"><path d="M50,320 Q-20,160 180,20 Q195,165 50,320Z" fill="#4a7c4a"/><path d="M80,310 Q10,160 200,30 Q218,162 80,310Z" fill="#2d5a2d" opacity="0.5"/></svg>
+  <svg width="200" height="300" style="top:80px;right:-20px" viewBox="0 0 200 300"><path d="M160,280 Q215,130 30,10 Q18,140 160,280Z" fill="#4a7c4a"/></svg>
+  <svg width="220" height="280" style="bottom:-30px;left:10px" viewBox="0 0 220 280"><path d="M40,260 Q-25,120 170,10 Q188,128 40,260Z" fill="#2d5a2d"/></svg>
+  <svg width="180" height="240" style="bottom:60px;right:-10px" viewBox="0 0 180 240"><path d="M148,222 Q200,100 22,8 Q10,112 148,222Z" fill="#4a7c4a" opacity="0.7"/></svg>
+</div>
+
+<!-- WELCOME -->
+<div class="screen" id="welcome">
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:clamp(0.75rem,2vh,1.25rem);width:100%;max-width:400px">
+    <svg width="110" height="58" viewBox="0 0 110 58" fill="none" style="opacity:0.55">
+      <path d="M55,54 Q55,28 55,8" stroke="#8fae8f" stroke-width="1"/>
+      <path d="M55,34 Q37,24 30,12 Q47,14 55,34Z" stroke="#8fae8f" stroke-width="0.8" fill="none"/>
+      <path d="M55,34 Q73,24 80,12 Q63,14 55,34Z" stroke="#8fae8f" stroke-width="0.8" fill="none"/>
+      <path d="M55,20 Q41,12 36,3 Q51,5 55,20Z" stroke="#8fae8f" stroke-width="0.8" fill="none"/>
+      <path d="M55,20 Q69,12 74,3 Q59,5 55,20Z" stroke="#8fae8f" stroke-width="0.8" fill="none"/>
+    </svg>
+    <div>
+      <div class="welcome-title">Adam <span class="welcome-amp">&</span> Kelvin</div>
+      <div class="welcome-sub">May 23rd, 2026 · Chandler, Texas</div>
+    </div>
+    <div class="welcome-divider"></div>
+    <div style="font-size:clamp(9px,2.5vw,11px);letter-spacing:4px;text-transform:uppercase;color:var(--sage)">Wedding Photobooth</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,3.5vw,17px);color:rgba(212,230,212,0.6);text-align:center;line-height:1.8;max-width:280px">
+      4 shots · 5 second countdown<br>Save & share your strip
+    </div>
+    <button class="btn-primary" id="openBtn">Open Photobooth</button>
+    <div class="error-box" id="errorBox"></div>
+    <div id="iframeNote" style="display:none;font-family:'Josefin Sans',sans-serif;font-size:clamp(10px,2.8vw,12px);letter-spacing:2px;color:rgba(143,174,143,0.65);text-align:center;line-height:1.9;max-width:280px;text-transform:uppercase">
+      Opens in a new tab so the<br>camera works on your device
+    </div>
+    <svg width="110" height="44" viewBox="0 0 110 44" fill="none" style="opacity:0.45;transform:rotate(180deg)">
+      <path d="M55,4 Q55,22 55,42" stroke="#8fae8f" stroke-width="1"/>
+      <path d="M55,24 Q37,17 30,8 Q47,10 55,24Z" stroke="#8fae8f" stroke-width="0.8" fill="none"/>
+      <path d="M55,24 Q73,17 80,8 Q63,10 55,24Z" stroke="#8fae8f" stroke-width="0.8" fill="none"/>
+    </svg>
+  </div>
+</div>
+
+<!-- CAMERA -->
+<div class="screen hidden" id="camera-screen">
+  <video id="video" autoplay playsinline muted webkit-playsinline></video>
+  <div class="camera-overlay"></div>
+  <canvas id="capture-canvas" style="display:none"></canvas>
+
+  <svg class="frame-corner tl" width="55" height="55" viewBox="0 0 55 55" fill="none">
+    <path d="M6,49 Q6,6 49,6" stroke="rgba(212,230,212,0.5)" stroke-width="1.2" fill="none"/>
+    <path d="M6,32 Q1,20 6,11 Q12,20 6,32Z" stroke="rgba(212,230,212,0.4)" stroke-width="0.8" fill="none"/>
+    <circle cx="6" cy="6" r="2.5" fill="rgba(184,150,90,0.6)"/>
+  </svg>
+  <svg class="frame-corner tr" width="55" height="55" viewBox="0 0 55 55" fill="none">
+    <path d="M6,49 Q6,6 49,6" stroke="rgba(212,230,212,0.5)" stroke-width="1.2" fill="none"/>
+    <path d="M6,32 Q1,20 6,11 Q12,20 6,32Z" stroke="rgba(212,230,212,0.4)" stroke-width="0.8" fill="none"/>
+    <circle cx="6" cy="6" r="2.5" fill="rgba(184,150,90,0.6)"/>
+  </svg>
+  <svg class="frame-corner bl" width="55" height="55" viewBox="0 0 55 55" fill="none">
+    <path d="M6,49 Q6,6 49,6" stroke="rgba(212,230,212,0.5)" stroke-width="1.2" fill="none"/>
+    <path d="M6,32 Q1,20 6,11 Q12,20 6,32Z" stroke="rgba(212,230,212,0.4)" stroke-width="0.8" fill="none"/>
+    <circle cx="6" cy="6" r="2.5" fill="rgba(184,150,90,0.6)"/>
+  </svg>
+  <svg class="frame-corner br" width="55" height="55" viewBox="0 0 55 55" fill="none">
+    <path d="M6,49 Q6,6 49,6" stroke="rgba(212,230,212,0.5)" stroke-width="1.2" fill="none"/>
+    <path d="M6,32 Q1,20 6,11 Q12,20 6,32Z" stroke="rgba(212,230,212,0.4)" stroke-width="0.8" fill="none"/>
+    <circle cx="6" cy="6" r="2.5" fill="rgba(184,150,90,0.6)"/>
+  </svg>
+
+  <div class="camera-top">
+    <div class="cam-title">Adam & Kelvin</div>
+    <div class="shot-counter" id="shotCounter"></div>
+  </div>
+
+  <div class="strip-preview" id="stripPreview"></div>
+  <div class="countdown-num" id="countdownNum"></div>
+  <div class="flash" id="flash"></div>
+  <div class="status-msg" id="statusMsg"></div>
+
+  <div class="camera-bottom">
+    <button class="btn-secondary" style="font-size:10px;padding:10px 14px;min-width:60px" onclick="flipCamera()">Flip</button>
+    <div class="shutter" id="shutterBtn"></div>
+    <button class="btn-secondary" style="font-size:10px;padding:10px 14px;min-width:60px" onclick="retakeAll()">Retake</button>
+  </div>
+</div>
+
+<!-- STRIP -->
+<div class="screen hidden" id="strip-screen">
+  <div class="strip-title" style="margin-bottom:0.25rem">Your Photo Strip 🌿</div>
+  <div class="strip-wrapper" id="stripWrapper">
+    <div class="strip-footer">
+      <div class="strip-footer-name">Adam & Kelvin</div>
+      <div class="strip-footer-date">May 23 · 2026 · Chandler, Texas</div>
+    </div>
+    <svg class="strip-leaf-l" width="16" height="50" viewBox="0 0 16 50" fill="none">
+      <path d="M8,48 Q8,28 8,5" stroke="#2d5a2d" stroke-width="0.8"/>
+      <path d="M8,35 Q2,27 1,18 Q7,22 8,35Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
+      <path d="M8,22 Q2,15 1,8 Q7,11 8,22Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
+    </svg>
+    <svg class="strip-leaf-r" width="16" height="50" viewBox="0 0 16 50" fill="none">
+      <path d="M8,48 Q8,28 8,5" stroke="#2d5a2d" stroke-width="0.8"/>
+      <path d="M8,35 Q14,27 15,18 Q9,22 8,35Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
+      <path d="M8,22 Q14,15 15,8 Q9,11 8,22Z" fill="none" stroke="#2d5a2d" stroke-width="0.7"/>
+    </svg>
+  </div>
+  <div class="action-row" style="margin-top:0.25rem">
+    <button class="btn-primary" onclick="saveStrip()">Save to Photos</button>
+    <button class="btn-primary" onclick="shareStrip()">Share 🌿</button>
+  </div>
+  <button class="btn-secondary" style="margin-top:0.5rem" onclick="retakeAll()">Start Over</button>
+</div>
+
+<script>
+var stream=null, facingMode='user', photos=[], currentShot=0, isCounting=false;
+var TOTAL=4;
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  // ── IFRAME DETECTION ─────────────────────────
+  // iOS Safari completely blocks camera inside iframes (Google Sites, etc.)
+  // If we're embedded, show a "Open Full Screen" button instead
+  var inIframe = false;
+  try { inIframe = window.self !== window.top; } catch(e){ inIframe = true; }
+
+  if(inIframe){
+    var btn = document.getElementById('openBtn');
+    btn.textContent = 'Open Photobooth ↗';
+    btn.addEventListener('touchend', function(e){
+      e.preventDefault();
+      window.open(window.location.href, '_blank');
+    });
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      window.open(window.location.href, '_blank');
+    });
+    // Show a small note
+    var note = document.getElementById('iframeNote');
+    if(note) note.style.display = 'block';
+    return; // don't attach camera button
+  }
+
+  // ── NORMAL: attach camera button ─────────────
+  var btn = document.getElementById('openBtn');
+  btn.addEventListener('touchend', function(e){ e.preventDefault(); startCamera(); });
+  btn.addEventListener('click', function(e){ e.preventDefault(); startCamera(); });
+
+  var shutter = document.getElementById('shutterBtn');
+  shutter.addEventListener('touchend', function(e){ e.preventDefault(); startCountdown(); });
+  shutter.addEventListener('click', function(e){ e.preventDefault(); startCountdown(); });
+});
+
+// ── CAMERA ────────────────────────────────────
+async function startCamera(){
+  var errBox = document.getElementById('errorBox');
+  errBox.style.display='none';
+
+  // Must be HTTPS for camera on iOS
+  if(location.protocol !== 'https:' && location.hostname !== 'localhost'){
+    showError('Camera requires HTTPS.<br>Please open this page via a hosted URL (e.g. Netlify).');
+    return;
+  }
+
+  // Check browser support
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    showError('Camera not available.<br>Please open this page in <strong>Safari</strong> on iPhone/iPad or <strong>Chrome</strong> on Android.');
+    return;
+  }
+
+  // iOS: check if permissions already denied
+  if(navigator.permissions && navigator.permissions.query){
+    try {
+      var perm = await navigator.permissions.query({name:'camera'});
+      if(perm.state === 'denied'){
+        showError('Camera is blocked.<br>Go to <strong>Settings → Safari → Camera</strong> and set to Allow, then refresh.');
+        return;
+      }
+    } catch(e){} // permissions API not supported on all browsers, continue anyway
+  }
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode:{ideal:facingMode}, width:{ideal:1080}, height:{ideal:1440} },
+      audio:false
+    });
+    onStreamReady();
+  } catch(err1) {
+    try {
+      // Retry with minimal constraints
+      stream = await navigator.mediaDevices.getUserMedia({ video:{facingMode:{ideal:facingMode}}, audio:false });
+      onStreamReady();
+    } catch(err2) {
+      var msg;
+      if(err2.name==='NotAllowedError'||err2.name==='PermissionDeniedError'){
+        msg = '📷 Camera permission denied.<br><br>On iPhone/iPad:<br><strong>Settings → Safari → Camera → Allow</strong><br><br>Then close & reopen this page.';
+      } else if(err2.name==='NotFoundError'){
+        msg = 'No camera found on this device.';
+      } else if(err2.name==='NotReadableError'){
+        msg = 'Camera is busy.<br>Close other apps using the camera and try again.';
+      } else if(err2.name==='AbortError'){
+        msg = 'Camera start was interrupted.<br>Please try again.';
+      } else {
+        msg = 'Camera error: ' + (err2.message||err2.name) + '<br>Please try opening in Safari.';
+      }
+      showError(msg);
+    }
+  }
+}
+
+function onStreamReady(){
+  var video = document.getElementById('video');
+  video.srcObject = stream;
+  video.onloadedmetadata = function(){ video.play(); };
+  showScreen('camera-screen');
+  photos=[];currentShot=0;
+  buildShotCounter();buildStripPreview();
+}
+
+function showError(msg){
+  var errBox = document.getElementById('errorBox');
+  errBox.innerHTML = msg;
+  errBox.style.display='block';
+}
+
+async function flipCamera(){
+  facingMode = facingMode==='user' ? 'environment' : 'user';
+  if(stream){ stream.getTracks().forEach(function(t){t.stop();}); }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facingMode}},audio:false});
+    var video=document.getElementById('video');
+    video.srcObject=stream;
+    video.style.transform = facingMode==='user' ? 'scaleX(-1)' : 'scaleX(1)';
+  } catch(e){ facingMode=facingMode==='user'?'environment':'user'; }
+}
+
+// ── COUNTER + PREVIEW ─────────────────────────
+function buildShotCounter(){
+  var el=document.getElementById('shotCounter');
+  el.innerHTML='';
+  for(var i=0;i<TOTAL;i++){
+    var d=document.createElement('div');
+    d.className='shot-dot'+(i<photos.length?' taken':i===photos.length?' next':'');
+    el.appendChild(d);
+  }
+}
+function buildStripPreview(){
+  var el=document.getElementById('stripPreview');
+  el.innerHTML='';
+  for(var i=0;i<TOTAL;i++){
+    var d=document.createElement('div');
+    d.className='strip-thumb'+(photos[i]?'':' empty');
+    if(photos[i]){var img=document.createElement('img');img.src=photos[i];d.appendChild(img);}
+    el.appendChild(d);
+  }
+}
+
+// ── COUNTDOWN ─────────────────────────────────
+function startCountdown(){
+  if(isCounting||currentShot>=TOTAL) return;
+  isCounting=true;
+  document.getElementById('shutterBtn').classList.add('counting');
+  var numEl=document.getElementById('countdownNum');
+  var count=5;
+  numEl.textContent=count;numEl.classList.add('show');
+  var tick=setInterval(function(){
+    count--;
+    if(count>0){
+      numEl.textContent=count;
+      setTimeout(function(){numEl.classList.remove('show');setTimeout(function(){numEl.classList.add('show');},100);},700);
+    } else {
+      clearInterval(tick);
+      numEl.classList.remove('show');
+      setTimeout(capturePhoto, 300);
+    }
+  },1000);
+}
+
+function capturePhoto(){
+  var video=document.getElementById('video');
+  var canvas=document.getElementById('capture-canvas');
+  var vw=video.videoWidth||640, vh=video.videoHeight||480;
+  var ratio=3/4, srcW,srcH,srcX,srcY;
+  if(vw/vh>ratio){srcH=vh;srcW=vh*ratio;srcX=(vw-srcW)/2;srcY=0;}
+  else{srcW=vw;srcH=vw/ratio;srcX=0;srcY=(vh-srcH)/2;}
+  canvas.width=600;canvas.height=800;
+  var ctx=canvas.getContext('2d');
+  if(facingMode==='user'){ctx.save();ctx.translate(600,0);ctx.scale(-1,1);}
+  ctx.drawImage(video,srcX,srcY,srcW,srcH,0,0,600,800);
+  if(facingMode==='user')ctx.restore();
+
+  // flash
+  var fl=document.getElementById('flash');
+  fl.style.transition='none';fl.style.opacity='1';
+  setTimeout(function(){fl.style.transition='opacity 0.3s';fl.style.opacity='0';},80);
+
+  photos.push(canvas.toDataURL('image/jpeg',0.88));
+  currentShot++;
+  isCounting=false;
+  document.getElementById('shutterBtn').classList.remove('counting');
+  document.getElementById('countdownNum').classList.remove('show');
+  buildShotCounter();buildStripPreview();
+  if(currentShot>=TOTAL) setTimeout(buildFinalStrip,500);
+}
+
+// ── FINAL STRIP ───────────────────────────────
+function buildFinalStrip(){
+  var wrapper=document.getElementById('stripWrapper');
+  wrapper.querySelectorAll('.strip-photo').forEach(function(e){e.remove();});
+  var footer=wrapper.querySelector('.strip-footer');
+  photos.forEach(function(src){
+    var img=document.createElement('img');img.src=src;img.className='strip-photo';
+    wrapper.insertBefore(img,footer);
+  });
+  showScreen('strip-screen');
+  if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
+}
+
+// ── SAVE ─────────────────────────────────────
+async function saveStrip(){
+  showStatus('Preparing…');
+  var dataUrl=await renderStripCanvas();
+  // iOS Safari: open in new tab, user saves via long-press
+  if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+    var w=window.open('','_blank');
+    if(w){
+      w.document.write('<html><head><meta name="viewport" content="width=device-width"></head><body style="margin:0;background:#1a2f1a;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:1rem"><img src="'+dataUrl+'" style="max-width:90vw;border-radius:4px"><p style="color:#d4e6d4;font-family:sans-serif;font-size:13px;letter-spacing:2px;text-align:center;padding:0 1rem">PRESS & HOLD IMAGE TO SAVE TO PHOTOS</p></body></html>');
+      w.document.close();
+    }
+  } else {
+    var a=document.createElement('a');a.href=dataUrl;a.download='adam-kelvin-photobooth.jpg';a.click();
+  }
+  hideStatus();
+}
+
+// ── SHARE ─────────────────────────────────────
+async function shareStrip(){
+  showStatus('Preparing…');
+  var dataUrl=await renderStripCanvas();
+  hideStatus();
+  try {
+    var res=await fetch(dataUrl);
+    var blob=await res.blob();
+    var file=new File([blob],'adam-kelvin-photobooth.jpg',{type:'image/jpeg'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Adam & Kelvin · Wedding Photobooth',text:'Our photo strip from Adam & Kelvin\'s wedding! 🌿 May 23, 2026'});
+      return;
+    }
+  } catch(e){}
+  // Fallback
+  saveStrip();
+}
+
+// ── RENDER CANVAS ─────────────────────────────
+function renderStripCanvas(){
+  return new Promise(function(resolve){
+    var cw=620,ph=800,gap=10,pad=16,footerH=68;
+    var ch=pad+(ph+gap)*4-gap+footerH+pad;
+    var c=document.createElement('canvas');c.width=cw;c.height=ch;
+    var ctx=c.getContext('2d');
+    ctx.fillStyle='#faf7f2';ctx.fillRect(0,0,cw,ch);
+    ctx.strokeStyle='rgba(74,124,74,0.18)';ctx.lineWidth=2;ctx.strokeRect(5,5,cw-10,ch-10);
+    var loaded=0;
+    photos.forEach(function(src,i){
+      var img=new Image();
+      img.onload=function(){
+        ctx.drawImage(img,pad,pad+i*(ph+gap),cw-pad*2,ph);
+        loaded++;
+        if(loaded===photos.length){
+          var fy=ch-footerH;
+          ctx.fillStyle='rgba(212,230,212,0.15)';ctx.fillRect(0,fy,cw,footerH);
+          ctx.strokeStyle='rgba(74,124,74,0.12)';ctx.lineWidth=1;
+          ctx.beginPath();ctx.moveTo(0,fy);ctx.lineTo(cw,fy);ctx.stroke();
+          ctx.fillStyle='#1a2f1a';
+          ctx.font='italic 400 21px Georgia,serif';
+          ctx.textAlign='center';ctx.fillText('Adam & Kelvin',cw/2,fy+25);
+          ctx.fillStyle='#4a7c4a';
+          ctx.font='300 9px sans-serif';
+          ctx.fillText('MAY 23 · 2026 · CHANDLER, TEXAS',cw/2,fy+44);
+          [cw/2-70,cw/2,cw/2+70].forEach(function(x){
+            ctx.beginPath();ctx.arc(x,fy+58,2,0,Math.PI*2);
+            ctx.fillStyle='rgba(184,150,90,0.5)';ctx.fill();
+          });
+          resolve(c.toDataURL('image/jpeg',0.92));
+        }
+      };
+      img.src=src;
+    });
+  });
+}
+
+function showStatus(msg){
+  var el=document.getElementById('statusMsg');
+  if(el){el.textContent=msg;el.classList.add('show');}
+}
+function hideStatus(){
+  var el=document.getElementById('statusMsg');
+  if(el)el.classList.remove('show');
+}
+function retakeAll(){
+  photos=[];currentShot=0;isCounting=false;
+  if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
+  showScreen('welcome');
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.toggle('hidden',s.id!==id);
+  });
+}
+</script>
+</body>
+</html>
