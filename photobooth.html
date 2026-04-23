@@ -127,77 +127,83 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
 .strip-title{font-family:'Cormorant Garamond',serif;font-size:clamp(20px,5.5vw,30px);font-style:italic;color:var(--cream);text-align:center;font-weight:300}
 .strip-wrapper{
   position:relative;
-  background:linear-gradient(160deg,#f8f4ee 0%,#faf7f2 50%,#f5f0e8 100%);
-  border-radius:3px;
+  background:#0f2010;
+  border-radius:4px;
   padding:0;
   display:flex;flex-direction:column;
   gap:0;
-  width:min(260px,68vw);
-  box-shadow:0 20px 60px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(74,124,74,0.12);
+  width:min(240px,64vw);
+  box-shadow:0 24px 70px rgba(0,0,0,0.7), 0 0 0 1px rgba(74,124,74,0.3);
   overflow:hidden;
 }
-/* header */
 .strip-header{
   position:relative;
-  padding:clamp(8px,2vw,14px) clamp(20px,5vw,28px) clamp(6px,1.5vw,10px);
+  padding:clamp(10px,2.5vw,16px) clamp(12px,3vw,20px) clamp(8px,2vw,12px);
   text-align:center;
-  background:linear-gradient(to bottom,rgba(212,230,212,0.35),transparent);
-  border-bottom:1px solid rgba(74,124,74,0.1);
+  background:linear-gradient(to bottom,rgba(20,50,20,0.9),rgba(15,32,16,0.7));
+  overflow:hidden;
 }
 .strip-branch-l,.strip-branch-r{
-  position:absolute;top:-4px;
-  width:clamp(55px,14vw,80px);height:clamp(70px,17vw,105px);
-  pointer-events:none;
+  position:absolute;top:-6px;
+  width:clamp(60px,16vw,90px);height:clamp(80px,20vw,120px);
+  pointer-events:none;opacity:0.95;
 }
-.strip-branch-l{left:-4px}
-.strip-branch-r{right:-4px;transform:scaleX(-1) scaleX(1)}
+.strip-branch-l{left:-8px}
+.strip-branch-r{right:-8px}
 .strip-header-name{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(13px,3.5vw,18px);
+  font-size:clamp(15px,4vw,20px);
   font-style:italic;font-weight:400;
-  color:var(--dark-green);line-height:1.2;
+  color:#faf7f2;letter-spacing:2px;line-height:1.2;
+  text-shadow:0 2px 12px rgba(0,0,0,0.5);
 }
 .strip-header-date{
   font-family:'Josefin Sans',sans-serif;
   font-size:clamp(6px,1.6vw,8px);
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--light-green);margin-top:2px;
+  letter-spacing:4px;text-transform:uppercase;
+  color:#8fae8f;margin-top:3px;
 }
-/* photos */
 .strip-photo{
   width:100%;aspect-ratio:3/4;object-fit:cover;display:block;
-  border-top:1px solid rgba(74,124,74,0.08);
-  border-bottom:1px solid rgba(74,124,74,0.08);
+  border-top:2px solid #0f2010;
+  border-bottom:2px solid #0f2010;
+  position:relative;z-index:1;
 }
-/* side vines */
+/* monstera overlay between photos */
+.strip-photo-wrap{position:relative}
+.strip-divider-leaf{
+  display:flex;align-items:center;justify-content:center;
+  height:clamp(18px,4vw,26px);
+  background:#0f2010;
+  position:relative;overflow:hidden;
+}
 .strip-vine-l,.strip-vine-r{
   position:absolute;top:0;bottom:0;
-  width:clamp(12px,3vw,18px);
+  width:clamp(14px,3.5vw,20px);
   pointer-events:none;z-index:2;
 }
 .strip-vine-l{left:0}
 .strip-vine-r{right:0}
-/* footer */
 .strip-footer{
   position:relative;
-  padding:clamp(8px,2vw,12px) clamp(20px,5vw,28px);
+  padding:clamp(10px,2.5vw,16px) clamp(12px,3vw,20px);
   text-align:center;
-  background:linear-gradient(to bottom,transparent,rgba(212,230,212,0.3));
-  border-top:1px solid rgba(74,124,74,0.1);
+  background:linear-gradient(to bottom,rgba(15,32,16,0.7),rgba(20,50,20,0.95));
+  overflow:hidden;
 }
 .strip-corner-bl,.strip-corner-br{
   position:absolute;bottom:0;
-  width:clamp(40px,10vw,60px);height:clamp(40px,10vw,60px);
-  pointer-events:none;opacity:0.55;
+  width:clamp(44px,11vw,65px);height:clamp(44px,11vw,65px);
+  pointer-events:none;opacity:0.9;
 }
 .strip-corner-bl{left:0}
 .strip-corner-br{right:0}
-.strip-footer-inner{display:flex;flex-direction:column;align-items:center;gap:4px}
+.strip-footer-inner{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;z-index:2}
 .strip-footer-loc{
   font-family:'Josefin Sans',sans-serif;
-  font-size:clamp(6px,1.5vw,8px);
-  letter-spacing:3px;text-transform:uppercase;
-  color:var(--light-green);
+  font-size:clamp(6px,1.6vw,8px);
+  letter-spacing:4px;text-transform:uppercase;
+  color:#8fae8f;
 }
 .strip-floral-divider{display:flex;justify-content:center;margin-top:2px}
 .action-row{display:flex;gap:0.6rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:340px}
@@ -378,23 +384,44 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
   <div id="stripView" style="display:none;flex-direction:column;align-items:center;gap:0.75rem;width:100%;overflow-y:auto;max-height:60svh">
     <div class="strip-wrapper" id="stripWrapper">
       <div class="strip-header">
-        <svg class="strip-branch-l" viewBox="0 0 90 140" fill="none">
-          <path d="M78,135 Q60,90 45,60 Q30,30 18,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
-          <path d="M45,60 Q20,50 8,35 Q28,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
-          <path d="M45,60 Q22,72 12,60 Q30,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
-          <path d="M60,90 Q36,82 24,66 Q44,70 60,90Z" fill="#4a7c4a" opacity="0.65"/>
-          <path d="M30,30 Q10,22 4,8 Q20,14 30,30Z" fill="#3a7a3a" opacity="0.6"/>
-          <circle cx="18" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
-          <circle cx="8" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
+        <svg class="strip-branch-l" viewBox="0 0 90 120" fill="none">
+          <!-- monstera stem -->
+          <path d="M75,118 Q55,80 35,45 Q22,22 8,2" stroke="#1a4a1a" stroke-width="1.8" fill="none"/>
+          <!-- large monstera leaf 1 -->
+          <path d="M35,45 Q5,30 0,10 Q15,8 28,20 Q34,30 35,45Z" fill="#2d6b2d" opacity="0.9"/>
+          <path d="M35,45 Q5,30 0,10" stroke="#1a4a1a" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <!-- monstera splits leaf 1 -->
+          <path d="M12,22 Q8,16 10,10" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <path d="M20,30 Q14,22 16,14" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <!-- large monstera leaf 2 -->
+          <path d="M35,45 Q48,18 38,2 Q28,0 22,12 Q26,28 35,45Z" fill="#3a7a3a" opacity="0.85"/>
+          <path d="M35,45 Q48,18 38,2" stroke="#1a4a1a" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <!-- splits leaf 2 -->
+          <path d="M40,20 Q44,14 42,6" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.6"/>
+          <!-- leaf 3 -->
+          <path d="M55,72 Q28,62 18,44 Q32,40 46,56 Q52,64 55,72Z" fill="#255225" opacity="0.8"/>
+          <path d="M55,72 Q28,62 18,44" stroke="#1a4a1a" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <path d="M28,54 Q22,48 24,40" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.6"/>
+          <!-- small leaf veins -->
+          <path d="M8,2 Q5,8 4,14" stroke="#4a9a4a" stroke-width="0.5" fill="none" opacity="0.4"/>
+          <!-- gold berry -->
+          <circle cx="8" cy="2" r="3" fill="#b8965a" opacity="0.85"/>
+          <circle cx="38" cy="2" r="2" fill="#b8965a" opacity="0.65"/>
         </svg>
-        <svg class="strip-branch-r" viewBox="0 0 90 140" fill="none">
-          <path d="M12,135 Q30,90 45,60 Q60,30 72,5" stroke="#2d5a2d" stroke-width="1.4" fill="none"/>
-          <path d="M45,60 Q70,50 82,35 Q62,38 45,60Z" fill="#3a7a3a" opacity="0.7"/>
-          <path d="M45,60 Q68,72 78,60 Q60,56 45,60Z" fill="#2d5a2d" opacity="0.5"/>
-          <path d="M30,90 Q54,82 66,66 Q46,70 30,90Z" fill="#4a7c4a" opacity="0.65"/>
-          <path d="M60,30 Q80,22 86,8 Q70,14 60,30Z" fill="#3a7a3a" opacity="0.6"/>
-          <circle cx="72" cy="6" r="2.5" fill="#b8965a" opacity="0.7"/>
-          <circle cx="82" cy="36" r="2" fill="#8fae8f" opacity="0.6"/>
+        <svg class="strip-branch-r" viewBox="0 0 90 120" fill="none">
+          <path d="M15,118 Q35,80 55,45 Q68,22 82,2" stroke="#1a4a1a" stroke-width="1.8" fill="none"/>
+          <path d="M55,45 Q85,30 90,10 Q75,8 62,20 Q56,30 55,45Z" fill="#2d6b2d" opacity="0.9"/>
+          <path d="M55,45 Q85,30 90,10" stroke="#1a4a1a" stroke-width="0.8" fill="none" opacity="0.6"/>
+          <path d="M78,22 Q82,16 80,10" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <path d="M70,30 Q76,22 74,14" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.7"/>
+          <path d="M55,45 Q42,18 52,2 Q62,0 68,12 Q64,28 55,45Z" fill="#3a7a3a" opacity="0.85"/>
+          <path d="M55,45 Q42,18 52,2" stroke="#1a4a1a" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M50,20 Q46,14 48,6" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.6"/>
+          <path d="M35,72 Q62,62 72,44 Q58,40 44,56 Q38,64 35,72Z" fill="#255225" opacity="0.8"/>
+          <path d="M35,72 Q62,62 72,44" stroke="#1a4a1a" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <path d="M62,54 Q68,48 66,40" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.6"/>
+          <circle cx="82" cy="2" r="3" fill="#b8965a" opacity="0.85"/>
+          <circle cx="52" cy="2" r="2" fill="#b8965a" opacity="0.65"/>
         </svg>
         <div class="strip-header-text">
           <div class="strip-header-name">Adam & Kelvin</div>
@@ -402,15 +429,90 @@ html,body{height:100%;width:100%;background:var(--dark-green);font-family:'Josef
         </div>
       </div>
       <div class="strip-footer">
-        <svg class="strip-corner-bl" viewBox="0 0 80 80" fill="none"><path d="M5,75 Q5,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/><path d="M5,55 Q-5,38 5,22 Q14,36 5,55Z" fill="#4a7c4a" opacity="0.6"/><path d="M20,28 Q10,14 18,4 Q24,16 20,28Z" fill="#4a7c4a" opacity="0.55"/><circle cx="5" cy="75" r="2" fill="#b8965a" opacity="0.5"/></svg>
-        <svg class="strip-corner-br" viewBox="0 0 80 80" fill="none"><path d="M75,75 Q75,40 40,5" stroke="#2d5a2d" stroke-width="1.2" fill="none"/><path d="M75,55 Q85,38 75,22 Q66,36 75,55Z" fill="#4a7c4a" opacity="0.6"/><path d="M60,28 Q70,14 62,4 Q56,16 60,28Z" fill="#4a7c4a" opacity="0.55"/><circle cx="75" cy="75" r="2" fill="#b8965a" opacity="0.5"/></svg>
+        <svg class="strip-corner-bl" viewBox="0 0 80 80" fill="none">
+          <path d="M5,78 Q5,45 38,8" stroke="#1a4a1a" stroke-width="1.2" fill="none"/>
+          <path d="M5,55 Q-8,38 4,20 Q16,34 5,55Z" fill="#2d6b2d" opacity="0.85"/>
+          <path d="M5,55 Q-8,38 4,20" stroke="#1a4a1a" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <path d="M0,38 Q-4,30 0,22" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.5"/>
+          <path d="M5,55 Q18,50 22,38 Q12,42 5,55Z" fill="#3a7a3a" opacity="0.7"/>
+          <path d="M20,28 Q8,16 16,4 Q24,14 20,28Z" fill="#255225" opacity="0.75"/>
+          <path d="M20,28 Q8,16 16,4" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.4"/>
+          <path d="M10,14 Q6,8 10,2" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.5"/>
+          <circle cx="38" cy="8" r="2.5" fill="#b8965a" opacity="0.8"/>
+        </svg>
+        <svg class="strip-corner-br" viewBox="0 0 80 80" fill="none">
+          <path d="M75,78 Q75,45 42,8" stroke="#1a4a1a" stroke-width="1.2" fill="none"/>
+          <path d="M75,55 Q88,38 76,20 Q64,34 75,55Z" fill="#2d6b2d" opacity="0.85"/>
+          <path d="M75,55 Q88,38 76,20" stroke="#1a4a1a" stroke-width="0.7" fill="none" opacity="0.5"/>
+          <path d="M80,38 Q84,30 80,22" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.5"/>
+          <path d="M75,55 Q62,50 58,38 Q68,42 75,55Z" fill="#3a7a3a" opacity="0.7"/>
+          <path d="M60,28 Q72,16 64,4 Q56,14 60,28Z" fill="#255225" opacity="0.75"/>
+          <path d="M60,28 Q72,16 64,4" stroke="#1a4a1a" stroke-width="0.6" fill="none" opacity="0.4"/>
+          <path d="M70,14 Q74,8 70,2" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.5"/>
+          <circle cx="42" cy="8" r="2.5" fill="#b8965a" opacity="0.8"/>
+        </svg>
         <div class="strip-footer-inner">
           <div class="strip-footer-loc">Chandler, Texas</div>
-          <div class="strip-floral-divider"><svg viewBox="0 0 120 14" fill="none" style="width:100px;height:12px"><line x1="0" y1="7" x2="42" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/><circle cx="52" cy="7" r="2" fill="#b8965a" opacity="0.6"/><circle cx="60" cy="7" r="3" fill="#b8965a" opacity="0.8"/><circle cx="68" cy="7" r="2" fill="#b8965a" opacity="0.6"/><line x1="78" y1="7" x2="120" y2="7" stroke="#8fae8f" stroke-width="0.6" opacity="0.7"/><path d="M60,4 Q55,1 52,3 Q56,5 60,4Z" fill="#4a7c4a" opacity="0.6"/><path d="M60,4 Q65,1 68,3 Q64,5 60,4Z" fill="#4a7c4a" opacity="0.6"/></svg></div>
+          <div class="strip-floral-divider">
+            <svg viewBox="0 0 140 20" fill="none" style="width:120px;height:18px">
+              <line x1="0" y1="10" x2="38" y2="10" stroke="#3a7a3a" stroke-width="0.7" opacity="0.6"/>
+              <line x1="102" y1="10" x2="140" y2="10" stroke="#3a7a3a" stroke-width="0.7" opacity="0.6"/>
+              <!-- mini monstera left -->
+              <path d="M48,10 Q42,4 44,0 Q50,2 48,10Z" fill="#2d6b2d" opacity="0.8"/>
+              <path d="M48,10 Q42,16 44,20 Q50,18 48,10Z" fill="#255225" opacity="0.7"/>
+              <!-- center berry cluster -->
+              <circle cx="70" cy="10" r="4" fill="#b8965a" opacity="0.9"/>
+              <circle cx="60" cy="10" r="2.5" fill="#b8965a" opacity="0.65"/>
+              <circle cx="80" cy="10" r="2.5" fill="#b8965a" opacity="0.65"/>
+              <!-- mini monstera right -->
+              <path d="M92,10 Q98,4 96,0 Q90,2 92,10Z" fill="#2d6b2d" opacity="0.8"/>
+              <path d="M92,10 Q98,16 96,20 Q90,18 92,10Z" fill="#255225" opacity="0.7"/>
+              <!-- leaf veins -->
+              <path d="M70,6 Q65,3 62,1" stroke="#4a9a4a" stroke-width="0.5" fill="none" opacity="0.5"/>
+              <path d="M70,6 Q75,3 78,1" stroke="#4a9a4a" stroke-width="0.5" fill="none" opacity="0.5"/>
+            </svg>
+          </div>
         </div>
       </div>
-      <svg class="strip-vine-l" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none"><path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/><path d="M11,80 Q2,70 1,58 Q9,63 11,80Z" fill="#4a7c4a" opacity="0.35"/><path d="M11,160 Q2,150 0,138 Q9,143 11,160Z" fill="#4a7c4a" opacity="0.3"/><path d="M11,240 Q20,230 21,218 Q13,223 11,240Z" fill="#3a7a3a" opacity="0.3"/><path d="M11,320 Q2,310 0,298 Q9,303 11,320Z" fill="#4a7c4a" opacity="0.28"/><path d="M11,400 Q20,390 21,378 Q13,383 11,400Z" fill="#3a7a3a" opacity="0.25"/></svg>
-      <svg class="strip-vine-r" viewBox="0 0 22 600" fill="none" preserveAspectRatio="none"><path d="M11,0 Q11,150 11,300 Q11,450 11,600" stroke="#2d5a2d" stroke-width="0.8" opacity="0.4"/><path d="M11,120 Q2,110 1,98 Q9,103 11,120Z" fill="#4a7c4a" opacity="0.3"/><path d="M11,200 Q2,190 0,178 Q9,183 11,200Z" fill="#4a7c4a" opacity="0.28"/><path d="M11,280 Q20,270 21,258 Q13,263 11,280Z" fill="#3a7a3a" opacity="0.3"/><path d="M11,360 Q2,350 0,338 Q9,343 11,360Z" fill="#4a7c4a" opacity="0.28"/><path d="M11,440 Q20,430 21,418 Q13,423 11,440Z" fill="#3a7a3a" opacity="0.25"/></svg>
+      <svg class="strip-vine-l" viewBox="0 0 20 600" fill="none" preserveAspectRatio="none">
+        <path d="M10,0 Q10,150 10,300 Q10,450 10,600" stroke="#1a4a1a" stroke-width="1" opacity="0.6"/>
+        <!-- monstera mini leaves alternating -->
+        <path d="M10,70 Q0,58 0,44 Q8,50 10,70Z" fill="#2d6b2d" opacity="0.8"/>
+        <path d="M10,70 Q0,58 0,44" stroke="#1a4a1a" stroke-width="0.5" fill="none" opacity="0.5"/>
+        <path d="M10,70 Q20,58 20,44 Q12,50 10,70Z" fill="#255225" opacity="0.6"/>
+        <path d="M10,145 Q0,133 0,119 Q8,125 10,145Z" fill="#2d6b2d" opacity="0.75"/>
+        <path d="M10,145 Q20,133 20,119 Q12,125 10,145Z" fill="#255225" opacity="0.55"/>
+        <path d="M10,220 Q0,208 0,194 Q8,200 10,220Z" fill="#2d6b2d" opacity="0.8"/>
+        <path d="M10,220 Q20,208 20,194 Q12,200 10,220Z" fill="#255225" opacity="0.6"/>
+        <path d="M10,295 Q0,283 0,269 Q8,275 10,295Z" fill="#2d6b2d" opacity="0.75"/>
+        <path d="M10,295 Q20,283 20,269 Q12,275 10,295Z" fill="#255225" opacity="0.55"/>
+        <path d="M10,370 Q0,358 0,344 Q8,350 10,370Z" fill="#2d6b2d" opacity="0.8"/>
+        <path d="M10,370 Q20,358 20,344 Q12,350 10,370Z" fill="#255225" opacity="0.6"/>
+        <path d="M10,445 Q0,433 0,419 Q8,425 10,445Z" fill="#2d6b2d" opacity="0.75"/>
+        <path d="M10,445 Q20,433 20,419 Q12,425 10,445Z" fill="#255225" opacity="0.55"/>
+        <path d="M10,520 Q0,508 0,494 Q8,500 10,520Z" fill="#2d6b2d" opacity="0.8"/>
+        <circle cx="10" cy="70" r="1.5" fill="#b8965a" opacity="0.5"/>
+        <circle cx="10" cy="220" r="1.5" fill="#b8965a" opacity="0.5"/>
+        <circle cx="10" cy="370" r="1.5" fill="#b8965a" opacity="0.5"/>
+        <circle cx="10" cy="520" r="1.5" fill="#b8965a" opacity="0.5"/>
+      </svg>
+      <svg class="strip-vine-r" viewBox="0 0 20 600" fill="none" preserveAspectRatio="none">
+        <path d="M10,0 Q10,150 10,300 Q10,450 10,600" stroke="#1a4a1a" stroke-width="1" opacity="0.6"/>
+        <path d="M10,107 Q0,95 0,81 Q8,87 10,107Z" fill="#2d6b2d" opacity="0.75"/>
+        <path d="M10,107 Q20,95 20,81 Q12,87 10,107Z" fill="#255225" opacity="0.8"/>
+        <path d="M10,182 Q0,170 0,156 Q8,162 10,182Z" fill="#2d6b2d" opacity="0.8"/>
+        <path d="M10,182 Q20,170 20,156 Q12,162 10,182Z" fill="#255225" opacity="0.6"/>
+        <path d="M10,257 Q0,245 0,231 Q8,237 10,257Z" fill="#2d6b2d" opacity="0.75"/>
+        <path d="M10,257 Q20,245 20,231 Q12,237 10,257Z" fill="#255225" opacity="0.8"/>
+        <path d="M10,332 Q0,320 0,306 Q8,312 10,332Z" fill="#2d6b2d" opacity="0.8"/>
+        <path d="M10,332 Q20,320 20,306 Q12,312 10,332Z" fill="#255225" opacity="0.6"/>
+        <path d="M10,407 Q0,395 0,381 Q8,387 10,407Z" fill="#2d6b2d" opacity="0.75"/>
+        <path d="M10,407 Q20,395 20,381 Q12,387 10,407Z" fill="#255225" opacity="0.8"/>
+        <path d="M10,482 Q0,470 0,456 Q8,462 10,482Z" fill="#2d6b2d" opacity="0.8"/>
+        <circle cx="10" cy="107" r="1.5" fill="#b8965a" opacity="0.5"/>
+        <circle cx="10" cy="257" r="1.5" fill="#b8965a" opacity="0.5"/>
+        <circle cx="10" cy="407" r="1.5" fill="#b8965a" opacity="0.5"/>
+      </svg>
     </div>
   </div>
 
@@ -712,23 +814,20 @@ function renderStripCanvas(){
     var c=document.createElement('canvas'); c.width=cw; c.height=ch;
     var ctx=c.getContext('2d');
 
-    // cream background with subtle gradient
-    var grad = ctx.createLinearGradient(0,0,cw,ch);
-    grad.addColorStop(0,'#f8f4ee'); grad.addColorStop(0.5,'#faf7f2'); grad.addColorStop(1,'#f5f0e8');
-    ctx.fillStyle=grad; ctx.fillRect(0,0,cw,ch);
+    // DARK GREEN background
+    ctx.fillStyle='#0f2010'; ctx.fillRect(0,0,cw,ch);
 
-    // outer botanical border - double line
-    ctx.strokeStyle='rgba(74,124,74,0.25)'; ctx.lineWidth=2;
-    ctx.strokeRect(6,6,cw-12,ch-12);
-    ctx.strokeStyle='rgba(74,124,74,0.12)'; ctx.lineWidth=1;
-    ctx.strokeRect(10,10,cw-20,ch-20);
+    // outer monstera border
+    ctx.strokeStyle='rgba(45,107,45,0.5)'; ctx.lineWidth=3;
+    ctx.strokeRect(4,4,cw-8,ch-8);
+    ctx.strokeStyle='rgba(74,124,74,0.25)'; ctx.lineWidth=1;
+    ctx.strokeRect(9,9,cw-18,ch-18);
 
     // ── HEADER ───────────────────────────────
-    // header bg
     var hgrad=ctx.createLinearGradient(0,0,0,headerH);
-    hgrad.addColorStop(0,'rgba(212,230,212,0.4)'); hgrad.addColorStop(1,'rgba(212,230,212,0)');
+    hgrad.addColorStop(0,'rgba(20,50,20,0.95)'); hgrad.addColorStop(1,'rgba(15,32,16,0.7)');
     ctx.fillStyle=hgrad; ctx.fillRect(0,0,cw,headerH);
-    ctx.strokeStyle='rgba(74,124,74,0.15)'; ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(45,107,45,0.3)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(0,headerH); ctx.lineTo(cw,headerH); ctx.stroke();
 
     // draw botanical branches top-left
@@ -756,18 +855,42 @@ function renderStripCanvas(){
     drawBranch(ctx, 12, 2, false);
     drawBranch(ctx, cw-72, 2, true);
 
-    // header text
+    // draw monstera leaves in header corners
     ctx.globalAlpha=1;
-    ctx.fillStyle='#1a2f1a'; ctx.textAlign='center';
-    ctx.font='italic 400 28px Georgia,serif';
-    ctx.fillText('Adam & Kelvin', cw/2, 48);
-    ctx.fillStyle='#4a7c4a';
+    function drawMonstera(ctx, ox, oy, flip){
+      ctx.save();
+      if(flip){ ctx.translate(ox*2,0); ctx.scale(-1,1); }
+      ctx.strokeStyle='#1a4a1a'; ctx.lineWidth=1.5; ctx.globalAlpha=0.9;
+      ctx.beginPath(); ctx.moveTo(ox+60,oy+90); ctx.quadraticCurveTo(ox+35,oy+50,ox+18,oy+6); ctx.stroke();
+      function mLeaf(ax,ay,bx,by,cx,cy,col,op){
+        ctx.beginPath(); ctx.moveTo(ax,ay); ctx.quadraticCurveTo(bx,by,cx,cy); ctx.quadraticCurveTo(bx+3,ay+4,ax,ay); ctx.closePath();
+        ctx.fillStyle=col; ctx.globalAlpha=op; ctx.fill();
+        // vein
+        ctx.beginPath(); ctx.moveTo(ax,ay); ctx.quadraticCurveTo((ax+cx)/2,(ay+cy)/2-4,cx,cy);
+        ctx.strokeStyle='#1a4a1a'; ctx.lineWidth=0.6; ctx.globalAlpha=op*0.5; ctx.stroke();
+      }
+      mLeaf(ox+18,oy+6, ox+2,oy+0, ox-4,oy-10, '#2d6b2d',0.9);
+      mLeaf(ox+18,oy+6, ox+32,oy+0, ox+36,oy-8, '#3a7a3a',0.8);
+      mLeaf(ox+35,oy+50, ox+12,oy+40, ox+4,oy+28, '#255225',0.85);
+      mLeaf(ox+35,oy+50, ox+50,oy+42, ox+54,oy+30, '#2d6b2d',0.7);
+      ctx.globalAlpha=0.9;
+      ctx.beginPath(); ctx.arc(ox+18,oy+6,3,0,Math.PI*2); ctx.fillStyle='#b8965a'; ctx.fill();
+      ctx.restore();
+    }
+    drawMonstera(ctx, 8, 8, false);
+    drawMonstera(ctx, cw-68, 8, true);
+
+    // header text on dark bg
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#faf7f2'; ctx.textAlign='center';
+    ctx.font='italic 400 30px Georgia,serif';
+    ctx.fillText('Adam & Kelvin', cw/2, 50);
+    ctx.fillStyle='#8fae8f';
     ctx.font='300 11px sans-serif';
-    ctx.fillText('MAY 23  ·  2026', cw/2, 68);
-    // small gold dots
+    ctx.fillText('MAY 23  ·  2026', cw/2, 70);
     [cw/2-30,cw/2,cw/2+30].forEach(function(x){
-      ctx.beginPath(); ctx.arc(x,82,2,0,Math.PI*2);
-      ctx.fillStyle='rgba(184,150,90,0.6)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(x,84,x===cw/2?3:2,0,Math.PI*2);
+      ctx.fillStyle='rgba(184,150,90,'+(x===cw/2?'0.9':'0.6')+')'; ctx.fill();
     });
 
     // ── PHOTOS ───────────────────────────────
@@ -783,19 +906,25 @@ function renderStripCanvas(){
         }
         ctx.drawImage(img, pad, py, cw-pad*2, ph);
 
-        // side vine marks along photo edges
-        ctx.fillStyle='rgba(45,90,45,0.18)';
-        ctx.fillRect(0, py, pad-2, ph);
-        ctx.fillRect(cw-pad+2, py, pad-2, ph);
+        // dark green side bars with monstera tint
+        ctx.fillStyle='#0f2010';
+        ctx.fillRect(0, py, pad, ph);
+        ctx.fillRect(cw-pad, py, pad, ph);
+        // tiny leaf marks on sides
+        ctx.fillStyle='#2d6b2d'; ctx.globalAlpha=0.7;
+        var leafY = py + ph/4;
+        ctx.beginPath(); ctx.moveTo(pad,leafY); ctx.quadraticCurveTo(2,leafY-8,0,leafY-16); ctx.quadraticCurveTo(4,leafY-8,pad,leafY); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(cw-pad,leafY+ph/2); ctx.quadraticCurveTo(cw-2,leafY+ph/2-8,cw,leafY+ph/2-16); ctx.quadraticCurveTo(cw-4,leafY+ph/2-8,cw-pad,leafY+ph/2); ctx.closePath(); ctx.fill();
+        ctx.globalAlpha=1;
 
         loaded++;
         if(loaded===photos.length){
           // ── FOOTER ───────────────────────────
           var fy = ch - footerH;
           var fgrad=ctx.createLinearGradient(0,fy,0,ch);
-          fgrad.addColorStop(0,'rgba(212,230,212,0)'); fgrad.addColorStop(1,'rgba(212,230,212,0.45)');
+          fgrad.addColorStop(0,'rgba(15,32,16,0.7)'); fgrad.addColorStop(1,'rgba(20,50,20,0.95)');
           ctx.fillStyle=fgrad; ctx.fillRect(0,fy,cw,footerH);
-          ctx.strokeStyle='rgba(74,124,74,0.15)'; ctx.lineWidth=1;
+          ctx.strokeStyle='rgba(45,107,45,0.3)'; ctx.lineWidth=1;
           ctx.beginPath(); ctx.moveTo(0,fy); ctx.lineTo(cw,fy); ctx.stroke();
 
           // botanical corner bottom-left
@@ -832,12 +961,12 @@ function renderStripCanvas(){
           ctx.beginPath(); ctx.moveTo(cw/2,fy+19); ctx.quadraticCurveTo(cw/2+12,fy+15,cw/2+16,fy+19); ctx.quadraticCurveTo(cw/2+8,fy+21,cw/2,fy+19); ctx.closePath(); ctx.fill();
           ctx.globalAlpha=1;
 
-          ctx.fillStyle='#1a2f1a'; ctx.textAlign='center';
+          ctx.fillStyle='#8fae8f'; ctx.textAlign='center';
           ctx.font='300 10px sans-serif';
           ctx.fillText('CHANDLER, TEXAS', cw/2, fy+42);
-          ctx.fillStyle='rgba(74,124,74,0.5)';
-          ctx.font='300 8px sans-serif';
-          ctx.fillText('WITH LOVE · ALWAYS', cw/2, fy+60);
+          ctx.fillStyle='rgba(184,150,90,0.7)';
+          ctx.font='italic 300 9px Georgia,serif';
+          ctx.fillText('with love · always', cw/2, fy+60);
 
           resolve(c.toDataURL('image/jpeg',0.93));
         }
